@@ -3473,7 +3473,7 @@ Does this all look correct, or would you like to update anything?</div>
             <div class="gc-guest">${item.guest} &bull; RM ${item.room}</div>
           </div>
           <div class="gc-center">${item.time}</div>
-          <div class="gc-right"><span class="gc-pill ${item.status}">${item.status === 'needs' ? 'Needs reply' : 'Replied'}</span></div>`;
+          <div class="gc-right">${activeTab !== 'replied' ? `<span class="gc-pill ${item.status}">${item.status === 'needs' ? 'Needs reply' : 'Replied'}</span>` : ''}</div>`;
         return div;
       }
 

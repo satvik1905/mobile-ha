@@ -1644,14 +1644,10 @@
             </div>
 
             <div class="gc-toolbar">
-              <div class="gc-search">
+              <div class="gc-search" style="flex:1">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#A6AAB2" stroke-width="1.7"/><path d="M20 20l-4-4" stroke="#A6AAB2" stroke-width="1.7" stroke-linecap="round"/></svg>
                 <input id="gc-search" placeholder="Search hotel or guest…" />
               </div>
-              <button class="gc-sort" id="gc-sort-btn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M7 12h10M11 18h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                Needs reply first
-              </button>
             </div>
 
             <div class="gc-tabs">
@@ -3473,7 +3469,7 @@ Does this all look correct, or would you like to update anything?</div>
             <div class="gc-guest">${item.guest} &bull; RM ${item.room}</div>
           </div>
           <div class="gc-center">${item.time}</div>
-          <div class="gc-right">${activeTab !== 'replied' ? `<span class="gc-pill ${item.status}">${item.status === 'needs' ? 'Needs reply' : 'Replied'}</span>` : ''}</div>`;
+          <div class="gc-right">${activeTab === 'all' ? `<span class="gc-pill ${item.status}">${item.status === 'needs' ? 'Needs reply' : 'Replied'}</span>` : ''}</div>`;
         return div;
       }
 

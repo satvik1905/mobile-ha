@@ -381,24 +381,25 @@
   .chart-axis{ fill:#9AA0AB; font-size:9px; }
   .chart-grid{ stroke:#EEF0F4; stroke-width:1; }
 
-  /* hotel performance list */
-  .hp-title{ font-size:18px; font-weight:700; color:var(--ink); margin-top:24px; }
-  .hp-search{ display:flex; align-items:center; gap:10px; height:44px; margin-top:12px; background:#fff;
-    border:1px solid var(--line); border-radius:12px; padding:0 14px; }
-  .hp-search input{ flex:1; border:none; outline:none; background:none; font-family:inherit; font-size:14px; color:var(--ink); }
-  .hp-search input::placeholder{ color:#A6AAB2; }
-  .hp-sort{ display:flex; align-items:center; gap:8px; margin-top:12px; overflow-x:auto; }
-  .hp-sort::-webkit-scrollbar{ display:none; }
-  .hp-sortlbl{ flex:0 0 auto; font-size:12.5px; color:var(--muted); font-weight:500; margin-right:2px; }
-  .hp-chip{ flex:0 0 auto; padding:7px 13px; border-radius:20px; border:1px solid var(--line); background:#fff;
-    font-size:13px; font-weight:500; color:var(--muted); cursor:pointer; font-family:inherit; white-space:nowrap; }
-  .hp-chip.active{ background:#EBEEFF; border-color:#C7CFFF; color:#4E5FFF; }
-  .hp-list{ margin-top:12px; background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden; }
-  .hp-row{ display:flex; align-items:center; gap:11px; padding:13px 14px; border-bottom:1px solid var(--line-soft); cursor:pointer; }
-  .hp-row:last-child{ border-bottom:none; }
-  .hp-main{ flex:1; min-width:0; }
-  .hp-name{ font-size:15px; font-weight:600; color:#3B5BFF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .hp-meta{ font-size:12px; color:var(--muted); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  /* hotel performance carousel */
+  .hp-header{ display:flex; align-items:baseline; justify-content:space-between; margin-top:24px; margin-bottom:14px; }
+  .hp-title{ font-size:18px; font-weight:700; color:var(--ink); }
+  .hp-seeall{ font-size:14px; font-weight:600; color:#4E5FFF; background:none; border:none; cursor:pointer;
+    font-family:inherit; padding:6px 2px; display:flex; align-items:center; gap:4px; min-height:44px; }
+  .hp-list{ display:flex; flex-direction:row; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch; padding-bottom:4px; margin-left:-20px; margin-right:-20px;
+    padding-left:20px; padding-right:40px; }
+  .hp-list::-webkit-scrollbar{ display:none; }
+  .hp-row{ flex:0 0 260px; background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px;
+    cursor:pointer; scroll-snap-align:start; box-shadow:0 4px 16px rgba(20,20,40,.07);
+    transition:box-shadow .18s ease, transform .18s ease; }
+  .hp-row:active{ transform:scale(.97); box-shadow:0 2px 8px rgba(20,20,40,.10); }
+  .hp-name{ font-size:16.5px; font-weight:700; color:var(--ink); line-height:1.3; }
+  .hp-badge-row{ margin-top:8px; }
+  .hp-metrics{ display:grid; grid-template-columns:1fr 1fr; gap:14px 16px; margin-top:16px;
+    padding-top:14px; border-top:1px solid var(--line-soft); }
+  .hp-metric-label{ font-size:11.5px; color:var(--muted); font-weight:500; }
+  .hp-metric-value{ font-size:18px; font-weight:700; color:var(--ink); margin-top:2px; letter-spacing:-.3px; }
   .hp-badge{ flex:0 0 auto; font-size:12.5px; font-weight:600; padding:3px 8px; border-radius:8px; }
   .hp-badge.good{ background:#E6F7EE; color:#1F9D57; }
   .hp-badge.mid{ background:#FEF3E2; color:#C9861F; }
@@ -409,6 +410,67 @@
     background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.2); transition:transform .2s; }
   .hp-toggle.on{ background:#4E6EF5; }
   .hp-toggle.on::after{ transform:translateX(16px); }
+
+  /* hotel performance spoke page */
+  #hotel-performance-view{ position:absolute; top:52px; bottom:88px; left:0; right:0; z-index:38;
+    background:#F4F5F9; display:flex; flex-direction:column;
+    transform:translateX(100%); transition:transform .3s cubic-bezier(.32,.72,0,1); }
+  #hotel-performance-view.hidden{ transform:translateX(100%); pointer-events:none; }
+  #hotel-performance-view:not(.hidden){ transform:translateX(0); }
+  .hpv-header{ flex:0 0 auto; background:#fff; border-bottom:1px solid var(--line); }
+  .hpv-topbar{ display:flex; align-items:center; gap:10px; padding:14px 16px 12px; }
+  .hpv-back{ flex:0 0 auto; display:flex; align-items:center; background:none; border:none;
+    cursor:pointer; color:var(--ink); padding:4px; margin-left:-4px; }
+  .hpv-topbar h1{ flex:1; font-size:18px; font-weight:700; color:var(--ink); text-align:center; }
+  .hpv-topbar-spacer{ width:28px; flex:0 0 28px; }
+  .hpv-search-row{ display:flex; align-items:center; gap:10px; margin:0 16px 14px;
+    transition:gap .2s ease; }
+  .hpv-searchbar{ display:flex; align-items:center; gap:10px; height:44px; flex:1; min-width:0;
+    background:#F0F1F5; border:1px solid var(--line); border-radius:12px; padding:0 14px;
+    transition:border-color .15s ease; }
+  .hpv-search-row.active .hpv-searchbar{ border-color:#4E5FFF; background:#fff; }
+  .hpv-searchbar input{ flex:1; border:none; outline:none; background:none; font-family:inherit;
+    font-size:14px; color:var(--ink); min-width:0; }
+  .hpv-searchbar input::placeholder{ color:#A6AAB2; }
+  .hpv-cancel{ flex:0 0 auto; background:none; border:none; font-family:inherit; font-size:14.5px;
+    font-weight:600; color:#4E5FFF; cursor:pointer; padding:4px 0; white-space:nowrap;
+    display:none; opacity:0; transition:opacity .15s ease; }
+  .hpv-search-row.active .hpv-cancel{ display:block; opacity:1; }
+  .hpv-scroll{ flex:1; overflow-y:auto; padding:16px; -webkit-overflow-scrolling:touch; position:relative; }
+  .hpv-scroll::-webkit-scrollbar{ display:none; }
+  .hpv-list{ display:flex; flex-direction:column; gap:16px; }
+  .hpv-card{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px;
+    cursor:pointer; box-shadow:0 2px 10px rgba(20,20,40,.05);
+    transition:box-shadow .15s ease, transform .15s ease; }
+  .hpv-card:active{ transform:scale(.98); box-shadow:0 1px 4px rgba(20,20,40,.08); }
+  .hpv-name{ font-size:16px; font-weight:700; color:var(--ink); }
+  .hpv-badge-row{ margin-top:7px; }
+  .hpv-metrics{ display:grid; grid-template-columns:1fr 1fr; gap:12px 16px; margin-top:14px;
+    padding-top:13px; border-top:1px solid var(--line-soft); }
+  .hpv-metric-label{ font-size:11.5px; color:var(--muted); font-weight:500; }
+  .hpv-metric-value{ font-size:17px; font-weight:700; color:var(--ink); margin-top:2px; letter-spacing:-.3px; }
+  .hpv-empty{ text-align:center; color:var(--muted); font-size:14px; padding:40px 20px; }
+
+  /* search results overlay — replaces the scroll area when active */
+  #search-results-overlay{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    background:#fff; }
+  #search-results-overlay.hidden{ display:none; }
+  #search-results-overlay:not(.hidden) + .hpv-scroll{ display:none; }
+  #search-results-overlay::-webkit-scrollbar{ display:none; }
+  .sro-section{ padding:20px 16px 8px; }
+  .sro-section-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .sro-section-title{ font-size:13px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
+  .sro-clear{ background:none; border:none; font-family:inherit; font-size:13px; font-weight:600;
+    color:#4E5FFF; cursor:pointer; padding:4px 0; }
+  .sro-recent-item{ display:flex; align-items:center; gap:12px; padding:13px 0;
+    border-bottom:1px solid var(--line-soft); cursor:pointer; }
+  .sro-recent-item:last-child{ border-bottom:none; }
+  .sro-recent-icon{ flex:0 0 auto; width:32px; height:32px; border-radius:10px; background:#F4F5F9;
+    display:flex; align-items:center; justify-content:center; color:#9AA0AB; }
+  .sro-recent-name{ flex:1; font-size:15px; font-weight:500; color:var(--ink); }
+  .sro-recent-arrow{ flex:0 0 auto; color:#C4C8D0; }
+  .sro-results{ padding:12px 16px; display:flex; flex-direction:column; gap:14px; }
+  .sro-no-results{ text-align:center; color:var(--muted); font-size:14px; padding:40px 20px; }
 
   /* ===== AI Onboarding: property list ===== */
   .aio-tabs{ display:flex; gap:4px; overflow-x:auto; border-bottom:1px solid var(--line); margin-bottom:14px; }
@@ -1608,30 +1670,46 @@
                 </svg>
               </div>
 
-              <!-- Hotel Performance (table -> property list) -->
-              <div class="hp-title">Hotel Performance</div>
-              <div class="hp-search">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#A6AAB2" stroke-width="1.7"/><path d="M20 20l-4-4" stroke="#A6AAB2" stroke-width="1.7" stroke-linecap="round"/></svg>
-                <input id="hp-search-input" placeholder="Search by Hotel Name" />
-              </div>
-              <div class="hp-sort">
-                <span class="hp-sortlbl">Sort</span>
-                <button class="hp-chip" data-sort="rating">Rating</button>
-                <button class="hp-chip" data-sort="completion">Completion</button>
-                <button class="hp-chip" data-sort="scans">QR scans</button>
-                <button class="hp-chip" data-sort="ai">AI chats</button>
+              <!-- Property Performance (card deck — top 3) -->
+              <div class="hp-header">
+                <div class="hp-title">Property Performance</div>
+                <button class="hp-seeall">See All <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
               </div>
               <div class="hp-list" id="hp-list">
-                <div class="hp-row" data-name="Marriott Times Square" data-rating="4.5" data-completion="72" data-scans="443" data-ai="339"><div class="hp-main"><div class="hp-name">Marriott Times Square</div><div class="hp-meta">72% complete · 443 scans · 339 chats</div></div><span class="hp-badge good">4.5</span><span class="hp-toggle on"></span></div>
-                <div class="hp-row" data-name="Hilton Garden Inn" data-rating="4.2" data-completion="33" data-scans="321" data-ai="250"><div class="hp-main"><div class="hp-name">Hilton Garden Inn</div><div class="hp-meta">33% complete · 321 scans · 250 chats</div></div><span class="hp-badge good">4.2</span><span class="hp-toggle on"></span></div>
-                <div class="hp-row" data-name="Hyatt Regency" data-rating="4.8" data-completion="48" data-scans="512" data-ai="410"><div class="hp-main"><div class="hp-name">Hyatt Regency</div><div class="hp-meta">48% complete · 512 scans · 410 chats</div></div><span class="hp-badge good">4.8</span><span class="hp-toggle on"></span></div>
-                <div class="hp-row" data-name="Sheraton Park Avenue" data-rating="4.0" data-completion="75" data-scans="278" data-ai="198"><div class="hp-main"><div class="hp-name">Sheraton Park Avenue</div><div class="hp-meta">75% complete · 278 scans · 198 chats</div></div><span class="hp-badge good">4.0</span><span class="hp-toggle on"></span></div>
-                <div class="hp-row" data-name="The Westin New York" data-rating="2.5" data-completion="90" data-scans="350" data-ai="360"><div class="hp-main"><div class="hp-name">The Westin New York</div><div class="hp-meta">90% complete · 350 scans · 360 chats</div></div><span class="hp-badge bad">2.5</span><span class="hp-toggle on"></span></div>
-                <div class="hp-row" data-name="Ritz-Carlton" data-rating="3.2" data-completion="100" data-scans="215" data-ai="550"><div class="hp-main"><div class="hp-name">Ritz-Carlton</div><div class="hp-meta">100% complete · 215 scans · 550 chats</div></div><span class="hp-badge mid">3.2</span><span class="hp-toggle on"></span></div>
-                <div class="hp-row" data-name="InterContinental" data-rating="4.7" data-completion="88" data-scans="450" data-ai="480"><div class="hp-main"><div class="hp-name">InterContinental</div><div class="hp-meta">88% complete · 450 scans · 480 chats</div></div><span class="hp-badge good">4.7</span><span class="hp-toggle on"></span></div>
-                <div class="hp-row" data-name="Crowne Plaza" data-rating="4.1" data-completion="70" data-scans="350" data-ai="300"><div class="hp-main"><div class="hp-name">Crowne Plaza</div><div class="hp-meta">70% complete · 350 scans · 300 chats</div></div><span class="hp-badge good">4.1</span><span class="hp-toggle on"></span></div>
-                <div class="hp-row" data-name="Best Western Plus" data-rating="4.3" data-completion="40" data-scans="400" data-ai="230"><div class="hp-main"><div class="hp-name">Best Western Plus</div><div class="hp-meta">40% complete · 400 scans · 230 chats</div></div><span class="hp-badge good">4.3</span><span class="hp-toggle on"></span></div>
-                <div class="hp-row" data-name="Holiday Inn Express" data-rating="4.0" data-completion="30" data-scans="280" data-ai="150"><div class="hp-main"><div class="hp-name">Holiday Inn Express</div><div class="hp-meta">30% complete · 280 scans · 150 chats</div></div><span class="hp-badge good">4.0</span><span class="hp-toggle on"></span></div>
+
+                <div class="hp-row" data-name="Marriott Times Square" data-rating="4.5" data-completion="72" data-scans="443" data-reviews="128" data-ai="339">
+                  <div class="hp-name">Marriott Times Square</div>
+                  <div class="hp-badge-row"><span class="hp-badge good">&#9733; 4.5</span></div>
+                  <div class="hp-metrics">
+                    <div><div class="hp-metric-label">Completion</div><div class="hp-metric-value">72%</div></div>
+                    <div><div class="hp-metric-label">QR Scans</div><div class="hp-metric-value">443</div></div>
+                    <div><div class="hp-metric-label">Reviews</div><div class="hp-metric-value">128</div></div>
+                    <div><div class="hp-metric-label">AI Conversations</div><div class="hp-metric-value">339</div></div>
+                  </div>
+                </div>
+
+                <div class="hp-row" data-name="Hilton Garden Inn" data-rating="4.2" data-completion="33" data-scans="321" data-reviews="95" data-ai="250">
+                  <div class="hp-name">Hilton Garden Inn</div>
+                  <div class="hp-badge-row"><span class="hp-badge good">&#9733; 4.2</span></div>
+                  <div class="hp-metrics">
+                    <div><div class="hp-metric-label">Completion</div><div class="hp-metric-value">33%</div></div>
+                    <div><div class="hp-metric-label">QR Scans</div><div class="hp-metric-value">321</div></div>
+                    <div><div class="hp-metric-label">Reviews</div><div class="hp-metric-value">95</div></div>
+                    <div><div class="hp-metric-label">AI Conversations</div><div class="hp-metric-value">250</div></div>
+                  </div>
+                </div>
+
+                <div class="hp-row" data-name="Hyatt Regency" data-rating="4.8" data-completion="48" data-scans="512" data-reviews="203" data-ai="410">
+                  <div class="hp-name">Hyatt Regency</div>
+                  <div class="hp-badge-row"><span class="hp-badge good">&#9733; 4.8</span></div>
+                  <div class="hp-metrics">
+                    <div><div class="hp-metric-label">Completion</div><div class="hp-metric-value">48%</div></div>
+                    <div><div class="hp-metric-label">QR Scans</div><div class="hp-metric-value">512</div></div>
+                    <div><div class="hp-metric-label">Reviews</div><div class="hp-metric-value">203</div></div>
+                    <div><div class="hp-metric-label">AI Conversations</div><div class="hp-metric-value">410</div></div>
+                  </div>
+                </div>
+
               </div>
 
             </div>
@@ -3036,6 +3114,165 @@ Does this all look correct, or would you like to update anything?</div>
           </div>
         </div>
 
+        <!-- Hotel Performance spoke page -->
+        <div id="hotel-performance-view" class="hidden">
+          <div class="hpv-header">
+            <div class="hpv-topbar">
+              <button class="hpv-back" id="hpv-back" aria-label="Back"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <h1>Hotel Performance</h1>
+              <div class="hpv-topbar-spacer"></div>
+            </div>
+            <div class="hpv-search-row" id="hpv-search-row">
+              <div class="hpv-searchbar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#A6AAB2" stroke-width="1.7"/><path d="M20 20l-4-4" stroke="#A6AAB2" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <input type="text" id="performance-search" placeholder="Search hotels..." />
+              </div>
+              <button class="hpv-cancel" id="hpv-cancel">Cancel</button>
+            </div>
+          </div>
+          <!-- search results overlay (sibling to scroll, covers it completely) -->
+          <div id="search-results-overlay" class="hidden">
+            <div class="sro-section" id="sro-recents">
+              <div class="sro-section-head">
+                <span class="sro-section-title">Recent Searches</span>
+                <button class="sro-clear" id="sro-clear">Clear All</button>
+              </div>
+              <div class="sro-recent-item" data-hotel="Marriott Times Square">
+                <span class="sro-recent-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                <span class="sro-recent-name">Marriott Times Square</span>
+                <span class="sro-recent-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l6 7-6 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="sro-recent-item" data-hotel="Ritz-Carlton">
+                <span class="sro-recent-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                <span class="sro-recent-name">Ritz-Carlton</span>
+                <span class="sro-recent-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l6 7-6 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="sro-recent-item" data-hotel="Hyatt Regency">
+                <span class="sro-recent-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                <span class="sro-recent-name">Hyatt Regency</span>
+                <span class="sro-recent-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l6 7-6 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+            </div>
+            <div class="sro-results" id="sro-results"></div>
+          </div>
+
+          <div class="hpv-scroll">
+            <div class="hpv-list" id="hpv-list">
+
+              <div class="hpv-card" data-name="Marriott Times Square" data-rating="4.5" data-completion="72" data-scans="443" data-reviews="128" data-ai="339">
+                <div class="hpv-name">Marriott Times Square</div>
+                <div class="hpv-badge-row"><span class="hp-badge good">&#9733; 4.5</span></div>
+                <div class="hpv-metrics">
+                  <div><div class="hpv-metric-label">Completion</div><div class="hpv-metric-value">72%</div></div>
+                  <div><div class="hpv-metric-label">QR Scans</div><div class="hpv-metric-value">443</div></div>
+                  <div><div class="hpv-metric-label">Reviews</div><div class="hpv-metric-value">128</div></div>
+                  <div><div class="hpv-metric-label">AI Conversations</div><div class="hpv-metric-value">339</div></div>
+                </div>
+              </div>
+
+              <div class="hpv-card" data-name="Hilton Garden Inn" data-rating="4.2" data-completion="33" data-scans="321" data-reviews="95" data-ai="250">
+                <div class="hpv-name">Hilton Garden Inn</div>
+                <div class="hpv-badge-row"><span class="hp-badge good">&#9733; 4.2</span></div>
+                <div class="hpv-metrics">
+                  <div><div class="hpv-metric-label">Completion</div><div class="hpv-metric-value">33%</div></div>
+                  <div><div class="hpv-metric-label">QR Scans</div><div class="hpv-metric-value">321</div></div>
+                  <div><div class="hpv-metric-label">Reviews</div><div class="hpv-metric-value">95</div></div>
+                  <div><div class="hpv-metric-label">AI Conversations</div><div class="hpv-metric-value">250</div></div>
+                </div>
+              </div>
+
+              <div class="hpv-card" data-name="Hyatt Regency" data-rating="4.8" data-completion="48" data-scans="512" data-reviews="203" data-ai="410">
+                <div class="hpv-name">Hyatt Regency</div>
+                <div class="hpv-badge-row"><span class="hp-badge good">&#9733; 4.8</span></div>
+                <div class="hpv-metrics">
+                  <div><div class="hpv-metric-label">Completion</div><div class="hpv-metric-value">48%</div></div>
+                  <div><div class="hpv-metric-label">QR Scans</div><div class="hpv-metric-value">512</div></div>
+                  <div><div class="hpv-metric-label">Reviews</div><div class="hpv-metric-value">203</div></div>
+                  <div><div class="hpv-metric-label">AI Conversations</div><div class="hpv-metric-value">410</div></div>
+                </div>
+              </div>
+
+              <div class="hpv-card" data-name="Sheraton Park Avenue" data-rating="4.0" data-completion="75" data-scans="278" data-reviews="112" data-ai="198">
+                <div class="hpv-name">Sheraton Park Avenue</div>
+                <div class="hpv-badge-row"><span class="hp-badge good">&#9733; 4.0</span></div>
+                <div class="hpv-metrics">
+                  <div><div class="hpv-metric-label">Completion</div><div class="hpv-metric-value">75%</div></div>
+                  <div><div class="hpv-metric-label">QR Scans</div><div class="hpv-metric-value">278</div></div>
+                  <div><div class="hpv-metric-label">Reviews</div><div class="hpv-metric-value">112</div></div>
+                  <div><div class="hpv-metric-label">AI Conversations</div><div class="hpv-metric-value">198</div></div>
+                </div>
+              </div>
+
+              <div class="hpv-card" data-name="The Westin New York" data-rating="2.5" data-completion="90" data-scans="350" data-reviews="67" data-ai="360">
+                <div class="hpv-name">The Westin New York</div>
+                <div class="hpv-badge-row"><span class="hp-badge bad">&#9733; 2.5</span></div>
+                <div class="hpv-metrics">
+                  <div><div class="hpv-metric-label">Completion</div><div class="hpv-metric-value">90%</div></div>
+                  <div><div class="hpv-metric-label">QR Scans</div><div class="hpv-metric-value">350</div></div>
+                  <div><div class="hpv-metric-label">Reviews</div><div class="hpv-metric-value">67</div></div>
+                  <div><div class="hpv-metric-label">AI Conversations</div><div class="hpv-metric-value">360</div></div>
+                </div>
+              </div>
+
+              <div class="hpv-card" data-name="Ritz-Carlton" data-rating="3.2" data-completion="100" data-scans="215" data-reviews="184" data-ai="550">
+                <div class="hpv-name">Ritz-Carlton</div>
+                <div class="hpv-badge-row"><span class="hp-badge mid">&#9733; 3.2</span></div>
+                <div class="hpv-metrics">
+                  <div><div class="hpv-metric-label">Completion</div><div class="hpv-metric-value">100%</div></div>
+                  <div><div class="hpv-metric-label">QR Scans</div><div class="hpv-metric-value">215</div></div>
+                  <div><div class="hpv-metric-label">Reviews</div><div class="hpv-metric-value">184</div></div>
+                  <div><div class="hpv-metric-label">AI Conversations</div><div class="hpv-metric-value">550</div></div>
+                </div>
+              </div>
+
+              <div class="hpv-card" data-name="InterContinental" data-rating="4.7" data-completion="88" data-scans="450" data-reviews="176" data-ai="480">
+                <div class="hpv-name">InterContinental</div>
+                <div class="hpv-badge-row"><span class="hp-badge good">&#9733; 4.7</span></div>
+                <div class="hpv-metrics">
+                  <div><div class="hpv-metric-label">Completion</div><div class="hpv-metric-value">88%</div></div>
+                  <div><div class="hpv-metric-label">QR Scans</div><div class="hpv-metric-value">450</div></div>
+                  <div><div class="hpv-metric-label">Reviews</div><div class="hpv-metric-value">176</div></div>
+                  <div><div class="hpv-metric-label">AI Conversations</div><div class="hpv-metric-value">480</div></div>
+                </div>
+              </div>
+
+              <div class="hpv-card" data-name="Crowne Plaza" data-rating="4.1" data-completion="70" data-scans="350" data-reviews="141" data-ai="300">
+                <div class="hpv-name">Crowne Plaza</div>
+                <div class="hpv-badge-row"><span class="hp-badge good">&#9733; 4.1</span></div>
+                <div class="hpv-metrics">
+                  <div><div class="hpv-metric-label">Completion</div><div class="hpv-metric-value">70%</div></div>
+                  <div><div class="hpv-metric-label">QR Scans</div><div class="hpv-metric-value">350</div></div>
+                  <div><div class="hpv-metric-label">Reviews</div><div class="hpv-metric-value">141</div></div>
+                  <div><div class="hpv-metric-label">AI Conversations</div><div class="hpv-metric-value">300</div></div>
+                </div>
+              </div>
+
+              <div class="hpv-card" data-name="Best Western Plus" data-rating="4.3" data-completion="40" data-scans="400" data-reviews="108" data-ai="230">
+                <div class="hpv-name">Best Western Plus</div>
+                <div class="hpv-badge-row"><span class="hp-badge good">&#9733; 4.3</span></div>
+                <div class="hpv-metrics">
+                  <div><div class="hpv-metric-label">Completion</div><div class="hpv-metric-value">40%</div></div>
+                  <div><div class="hpv-metric-label">QR Scans</div><div class="hpv-metric-value">400</div></div>
+                  <div><div class="hpv-metric-label">Reviews</div><div class="hpv-metric-value">108</div></div>
+                  <div><div class="hpv-metric-label">AI Conversations</div><div class="hpv-metric-value">230</div></div>
+                </div>
+              </div>
+
+              <div class="hpv-card" data-name="Holiday Inn Express" data-rating="4.0" data-completion="30" data-scans="280" data-reviews="73" data-ai="150">
+                <div class="hpv-name">Holiday Inn Express</div>
+                <div class="hpv-badge-row"><span class="hp-badge good">&#9733; 4.0</span></div>
+                <div class="hpv-metrics">
+                  <div><div class="hpv-metric-label">Completion</div><div class="hpv-metric-value">30%</div></div>
+                  <div><div class="hpv-metric-label">QR Scans</div><div class="hpv-metric-value">280</div></div>
+                  <div><div class="hpv-metric-label">Reviews</div><div class="hpv-metric-value">73</div></div>
+                  <div><div class="hpv-metric-label">AI Conversations</div><div class="hpv-metric-value">150</div></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
       </div><!-- /phone -->
     </div><!-- /stage -->
   </div><!-- /fitwrap -->
@@ -3120,29 +3357,109 @@ Does this all look correct, or would you like to update anything?</div>
     document.querySelectorAll('.admin-tab').forEach(t =>
       t.addEventListener('click', () => showAdmin(t.dataset.adminScreen)));
 
-    // ---- hotel performance list: search, sort, enable toggles ----
+    // ---- hotel performance cards: drill-in on tap ----
     const hpList = document.getElementById('hp-list');
     if(hpList){
-      const hpInput = document.getElementById('hp-search-input');
-      hpInput.addEventListener('input', () => {
-        const q = hpInput.value.trim().toLowerCase();
-        hpList.querySelectorAll('.hp-row').forEach(r =>
-          r.style.display = r.dataset.name.toLowerCase().includes(q) ? 'flex' : 'none');
+      hpList.querySelectorAll('.hp-row').forEach(r =>
+        r.addEventListener('click', () => openAiProperty(r.dataset.name)));
+    }
+
+    // ---- Hotel Performance spoke page (See All) ----
+    const hpvOverlay  = document.getElementById('hotel-performance-view');
+    const hpvSearch   = document.getElementById('performance-search');
+    const hpvList     = document.getElementById('hpv-list');
+    const hpvSeeAll   = document.querySelector('.hp-seeall');
+    const hpvSearchRow= document.getElementById('hpv-search-row');
+    const hpvCancel   = document.getElementById('hpv-cancel');
+    const sroOverlay  = document.getElementById('search-results-overlay');
+    const sroRecents  = document.getElementById('sro-recents');
+    const sroResults  = document.getElementById('sro-results');
+
+    // helper: build a result card from a source .hpv-card
+    function buildResultCard(src){
+      const card = document.createElement('div');
+      card.className = 'hpv-card';
+      card.dataset.name = src.dataset.name;
+      card.innerHTML = src.innerHTML;
+      card.addEventListener('click', () => openAiProperty(card.dataset.name));
+      return card;
+    }
+
+    function closeSearchMode(){
+      hpvSearch.value = '';
+      hpvSearch.blur();
+      hpvSearchRow.classList.remove('active');
+      sroOverlay.classList.add('hidden');
+      sroRecents.style.display = '';
+      sroResults.innerHTML = '';
+    }
+
+    if(hpvOverlay && hpvSeeAll){
+      // open spoke page
+      hpvSeeAll.addEventListener('click', () => {
+        hpvOverlay.classList.remove('hidden');
+        setBar('#FFFFFF', false);
       });
-      document.querySelectorAll('.hp-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          document.querySelectorAll('.hp-chip').forEach(c => c.classList.remove('active'));
-          chip.classList.add('active');
-          const key = chip.dataset.sort;   // rating | completion | scans | ai
-          Array.from(hpList.querySelectorAll('.hp-row'))
-            .sort((a,b) => parseFloat(b.dataset[key]) - parseFloat(a.dataset[key]))
-            .forEach(r => hpList.appendChild(r));
+
+      // close spoke page (also resets search)
+      document.getElementById('hpv-back').addEventListener('click', () => {
+        closeSearchMode();
+        hpvOverlay.classList.add('hidden');
+        setBar('#FFFFFF', false);
+      });
+
+      // focus → activate search mode
+      hpvSearch.addEventListener('focus', () => {
+        hpvSearchRow.classList.add('active');
+        sroOverlay.classList.remove('hidden');
+        sroRecents.style.display = '';
+        sroResults.innerHTML = '';
+      });
+
+      // cancel → deactivate search mode
+      hpvCancel.addEventListener('click', closeSearchMode);
+
+      // live typing → filter into overlay
+      hpvSearch.addEventListener('input', () => {
+        const q = hpvSearch.value.trim().toLowerCase();
+        if(!q){
+          sroRecents.style.display = '';
+          sroResults.innerHTML = '';
+          return;
+        }
+        sroRecents.style.display = 'none';
+        sroResults.innerHTML = '';
+        const matches = hpvList.querySelectorAll('.hpv-card');
+        let found = false;
+        matches.forEach(src => {
+          if(src.dataset.name.toLowerCase().includes(q)){
+            sroResults.appendChild(buildResultCard(src));
+            found = true;
+          }
+        });
+        if(!found){
+          sroResults.innerHTML = '<div class="sro-no-results">No hotels match your search</div>';
+        }
+      });
+
+      // recent item tap → fill input and run search
+      sroRecents.querySelectorAll('.sro-recent-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const name = item.dataset.hotel;
+          hpvSearch.value = name;
+          hpvSearch.dispatchEvent(new Event('input'));
         });
       });
-      hpList.querySelectorAll('.hp-toggle').forEach(t =>
-        t.addEventListener('click', e => { e.stopPropagation(); t.classList.toggle('on'); }));
-      hpList.querySelectorAll('.hp-row').forEach(r =>
-        r.addEventListener('click', () => openAiProperty(r.dataset.name)));  // hotel is reachable from here too
+
+      // clear all recents
+      document.getElementById('sro-clear').addEventListener('click', e => {
+        e.stopPropagation();
+        sroRecents.querySelectorAll('.sro-recent-item').forEach(i => i.style.display = 'none');
+      });
+
+      // card drill-in (main list)
+      hpvList.querySelectorAll('.hpv-card').forEach(c =>
+        c.addEventListener('click', () => openAiProperty(c.dataset.name)));
     }
 
     // ---- AI Onboarding flow ----

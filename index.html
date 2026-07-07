@@ -3562,13 +3562,20 @@ Does this all look correct, or would you like to update anything?</div>
     const sroRecents  = document.getElementById('sro-recents');
     const sroResults  = document.getElementById('sro-results');
 
+    // close spoke page and open property detail
+    function hpvDrillIn(name){
+      closeSearchMode();
+      if(hpvOverlay) hpvOverlay.classList.add('hidden');
+      openAiProperty(name);
+    }
+
     // helper: build a result card from a source .hpv-card
     function buildResultCard(src){
       const card = document.createElement('div');
       card.className = 'hpv-card';
       card.dataset.name = src.dataset.name;
       card.innerHTML = src.innerHTML;
-      card.addEventListener('click', () => openAiProperty(card.dataset.name));
+      card.addEventListener('click', () => hpvDrillIn(card.dataset.name));
       return card;
     }
 
@@ -3646,7 +3653,7 @@ Does this all look correct, or would you like to update anything?</div>
 
       // card drill-in (main list)
       hpvList.querySelectorAll('.hpv-card').forEach(c =>
-        c.addEventListener('click', () => openAiProperty(c.dataset.name)));
+        c.addEventListener('click', () => hpvDrillIn(c.dataset.name)));
     }
 
     // ---- AI Onboarding flow ----

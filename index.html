@@ -3485,6 +3485,11 @@ Does this all look correct, or would you like to update anything?</div>
       aiSetup.classList.remove('open');
       aiPublished.classList.remove('open');
       aiProperty.classList.remove('open');
+      // also close hotel performance spoke page if open
+      if(hpvOverlay && !hpvOverlay.classList.contains('hidden')){
+        if(typeof closeSearchMode === 'function') closeSearchMode();
+        hpvOverlay.classList.add('hidden');
+      }
       setBar('#FFFFFF', false);          // admin uses a light top now
     }
 

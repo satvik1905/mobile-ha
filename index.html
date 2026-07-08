@@ -300,6 +300,16 @@
   .ctx-check{ flex:0 0 auto; color:var(--brand); display:none; }
   .ctx-row.active .ctx-check{ display:flex; }
 
+  /* welcome / switch-context sheet (shown right after login) */
+  .lw-title{ font-size:19px; font-weight:700; color:var(--ink); margin:4px 8px 8px; }
+  .lw-copy{ font-size:13.5px; color:var(--muted); line-height:1.5; margin:0 8px 6px; }
+
+  /* logged-out Profile state */
+  .profile-guest-header{ background:var(--lavender); padding:30px 22px 26px; border-radius:0 0 30px 30px; }
+  .profile-guest-header h1{ font-size:25px; font-weight:700; color:var(--ink); letter-spacing:-.3px; }
+  .profile-guest-header p{ font-size:14px; color:#4b4b52; margin-top:5px; }
+  .login-row{ margin:20px 20px 4px; }
+
   /* QR bottom sheet (view/grab a property's QR) */
   .qr-sheet-name{ font-size:18px; font-weight:700; color:var(--ink); text-align:center; margin-top:2px; }
   .qr-sheet-sub{ font-size:12.5px; color:var(--muted); text-align:center; margin-top:2px; }
@@ -355,6 +365,157 @@
   .admin-account .aa-sub{ font-size:12.5px; color:var(--muted); margin-top:1px; }
   .admin-account .aa-switch{ flex:0 0 auto; color:#4E5FFF; display:flex; }
   .admin-body .menu-tile.indigo{ background:#EBEEFF; }
+
+  /* User Management page */
+  #user-management-view{ position:absolute; top:52px; bottom:88px; left:0; right:0; z-index:38;
+    background:#F4F5F9; display:flex; flex-direction:column;
+    transform:translateX(100%); transition:transform .3s cubic-bezier(.32,.72,0,1); isolation:isolate; overflow:hidden; }
+  #user-management-view.hidden{ transform:translateX(100%); pointer-events:none; }
+  #user-management-view:not(.hidden){ transform:translateX(0); }
+  .um-header{ flex:0 0 auto; background:#fff; border-bottom:1px solid var(--line); }
+  .um-topbar{ display:flex; align-items:center; gap:10px; padding:14px 16px 12px; }
+  .um-back{ flex:0 0 auto; display:flex; align-items:center; background:none; border:none;
+    cursor:pointer; color:var(--ink); padding:4px; margin-left:-4px; }
+  .um-topbar h1{ flex:1; font-size:18px; font-weight:700; color:var(--ink); text-align:center; }
+  .um-topbar-spacer{ width:28px; flex:0 0 auto; }
+  .um-toolbar{ display:flex; align-items:center; gap:8px; margin:0 16px 12px; }
+  .um-searchbar{ flex:1; display:flex; align-items:center; gap:8px; padding:10px 12px;
+    border-radius:12px; background:#F0F1F6; border:1px solid transparent; min-height:44px; box-sizing:border-box; }
+  .um-searchbar:focus-within{ border-color:#4E5FFF; background:#fff; }
+  .um-searchbar input{ flex:1; border:none; background:none; outline:none; font-size:14px;
+    font-family:inherit; color:var(--ink); min-width:0; }
+  .um-searchbar input::placeholder{ color:#A6AAB2; }
+  .um-invite-btn{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:4px;
+    height:44px; padding:0 14px; border-radius:12px; background:#4E5FFF; color:#fff;
+    font-size:13px; font-weight:700; border:none; cursor:pointer; font-family:inherit;
+    white-space:nowrap; -webkit-tap-highlight-color:transparent; }
+  .um-invite-btn:active{ background:#3D4EDB; }
+  .um-scroll{ flex:1; overflow-y:auto; padding:12px 16px 20px; }
+  .um-scroll::-webkit-scrollbar{ display:none; }
+  .um-card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px;
+    margin-bottom:10px; }
+  .um-card.hidden-card{ display:none; }
+  .um-card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px; }
+  .um-card-info{ flex:1; min-width:0; }
+  .um-card-name{ font-size:15px; font-weight:700; color:var(--ink); }
+  .um-card-email{ font-size:12px; color:var(--muted); margin-top:2px; }
+  .um-card-top-right{ display:flex; align-items:center; gap:6px; flex:0 0 auto; }
+  .um-badge-pending{ display:inline-block; font-size:11px; font-weight:600; padding:3px 9px;
+    border-radius:8px; background:#FEF3E2; color:#B45309; white-space:nowrap; }
+  .um-menu-trigger{ width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+    border:none; background:none; cursor:pointer; font-size:20px; color:#8B8F9A;
+    border-radius:8px; -webkit-tap-highlight-color:transparent; }
+  .um-menu-trigger:active{ background:#F0F1F6; }
+  .um-card-meta{ font-size:12.5px; color:var(--muted); line-height:1.6; }
+  .um-card-meta strong{ color:var(--ink); font-weight:600; }
+  /* User action sheet */
+  #um-sheet-backdrop{ display:none; position:absolute; inset:0; background:rgba(0,0,0,.35); z-index:60; }
+  #um-sheet-backdrop.open{ display:block; }
+  #user-action-sheet{ position:absolute; bottom:0; left:0; right:0; z-index:61; background:#fff;
+    border-radius:16px 16px 0 0; transform:translateY(100%); transition:transform .3s ease;
+    padding-bottom:env(safe-area-inset-bottom,0); }
+  #user-action-sheet.open{ transform:translateY(0); }
+  .uas-option{ display:flex; align-items:center; gap:10px; width:100%; padding:16px 20px;
+    border:none; background:none; cursor:pointer; font-size:15px; font-weight:600;
+    color:var(--ink); font-family:inherit; border-bottom:1px solid var(--line);
+    -webkit-tap-highlight-color:transparent; min-height:52px; }
+  .uas-option:active{ background:#F4F5F9; }
+  .uas-option.danger{ color:#E05252; }
+  .uas-cancel{ display:block; width:calc(100% - 32px); margin:12px 16px 16px; padding:14px;
+    border:1px solid var(--line); border-radius:12px; background:#fff; font-size:15px;
+    font-weight:600; color:var(--ink); cursor:pointer; font-family:inherit; text-align:center;
+    -webkit-tap-highlight-color:transparent; min-height:48px; }
+  .uas-cancel:active{ background:#F0F1F6; }
+
+  /* Invite User page */
+  #invite-user-view{ position:absolute; top:52px; bottom:0; left:0; right:0; z-index:39;
+    background:#F4F5F9; display:flex; flex-direction:column;
+    transform:translateX(100%); transition:transform .3s cubic-bezier(.32,.72,0,1); }
+  #invite-user-view.hidden{ transform:translateX(100%); pointer-events:none; }
+  #invite-user-view:not(.hidden){ transform:translateX(0); }
+  .iu-header{ flex:0 0 auto; background:#fff; border-bottom:1px solid var(--line); }
+  .iu-topbar{ display:flex; align-items:center; gap:10px; padding:14px 16px 12px; }
+  .iu-back{ flex:0 0 auto; display:flex; align-items:center; background:none; border:none;
+    cursor:pointer; color:var(--ink); padding:4px; margin-left:-4px; }
+  .iu-topbar h1{ flex:1; font-size:18px; font-weight:700; color:var(--ink); text-align:center; }
+  .iu-topbar-spacer{ width:28px; flex:0 0 auto; }
+  .iu-scroll{ flex:1; overflow-y:auto; padding:16px 16px 90px; }
+  .iu-scroll::-webkit-scrollbar{ display:none; }
+  .iu-section-label{ font-size:14px; font-weight:700; color:var(--ink); margin-bottom:10px; }
+  .iu-form-card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px;
+    margin-bottom:20px; }
+  .iu-field{ margin-bottom:14px; }
+  .iu-field:last-child{ margin-bottom:0; }
+  .iu-label{ display:block; font-size:12.5px; font-weight:600; color:var(--muted); margin-bottom:6px; }
+  .iu-label .req{ color:#E05252; }
+  .iu-input{ display:block; width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px;
+    background:#FAFAFA; font-size:14px; font-family:inherit; color:var(--ink); box-sizing:border-box;
+    outline:none; -webkit-appearance:none; }
+  .iu-input:focus{ border-color:#4E5FFF; background:#fff; }
+  .iu-input::placeholder{ color:#B4B9C2; }
+  .iu-prop-row{ background:#fff; border:1px solid var(--line); border-radius:12px; margin-bottom:8px;
+    overflow:hidden; }
+  .iu-prop-header{ display:flex; align-items:center; gap:10px; padding:12px 14px; cursor:pointer;
+    -webkit-tap-highlight-color:transparent; }
+  .iu-prop-header:active{ background:#F8F8FB; }
+  .iu-prop-cb{ width:20px; height:20px; accent-color:#4E5FFF; flex:0 0 auto; cursor:pointer; }
+  .iu-prop-name{ flex:1; font-size:14px; font-weight:600; color:var(--ink); }
+  .iu-prop-chev{ flex:0 0 auto; font-size:14px; color:#B4B9C2; transition:transform .2s ease;
+    display:flex; align-items:center; }
+  .iu-prop-row.expanded .iu-prop-chev{ transform:rotate(180deg); }
+  .iu-prop-body{ display:none; padding:0 14px 14px; border-top:1px solid var(--line); }
+  .iu-prop-row.expanded .iu-prop-body{ display:block; }
+  .iu-prop-detail{ font-size:12.5px; color:var(--muted); line-height:1.7; margin-top:10px; }
+  .iu-prop-detail strong{ color:var(--ink); font-weight:600; }
+  .mobile-role-trigger{ display:flex; align-items:center; justify-content:space-between; width:100%;
+    padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:#FAFAFA;
+    font-size:13.5px; font-family:inherit; color:var(--ink); margin-top:10px; cursor:pointer;
+    -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  .mobile-role-trigger:active{ border-color:#4E5FFF; background:#fff; }
+  .mobile-role-trigger .role-chev{ font-size:10px; color:#B4B9C2; flex:0 0 auto; }
+  /* Role picker sheet */
+  #rp-backdrop{ display:none; position:absolute; inset:0; background:rgba(0,0,0,.35); z-index:70; }
+  #rp-backdrop.open{ display:block; }
+  #role-picker-sheet{ position:absolute; bottom:0; left:0; right:0; z-index:71; background:#fff;
+    border-radius:16px 16px 0 0; transform:translateY(100%); transition:transform .3s ease;
+    display:flex; flex-direction:column; }
+  #role-picker-sheet.open{ transform:translateY(0); }
+  .rp-title{ padding:16px 20px 12px; font-size:16px; font-weight:700; color:var(--ink);
+    border-bottom:1px solid var(--line); }
+  .rp-options{ padding:4px 0; }
+  .rp-option{ display:flex; align-items:center; justify-content:space-between; width:100%;
+    padding:14px 20px; border:none; background:none; cursor:pointer; font-size:15px;
+    color:var(--ink); font-family:inherit; -webkit-tap-highlight-color:transparent; }
+  .rp-option:active{ background:#F4F5F9; }
+  .rp-option.selected{ font-weight:700; color:#4E5FFF; }
+  .rp-check{ font-size:16px; color:#4E5FFF; visibility:hidden; }
+  .rp-option.selected .rp-check{ visibility:visible; }
+  .rp-footer{ display:flex; gap:10px; padding:12px 16px 16px; border-top:1px solid var(--line); }
+  .rp-footer button{ flex:1; padding:13px; border-radius:12px; font-size:14px; font-weight:700;
+    cursor:pointer; font-family:inherit; min-height:46px; -webkit-tap-highlight-color:transparent; }
+  #rp-cancel{ background:#fff; border:1px solid var(--line); color:var(--ink); }
+  #rp-cancel:active{ background:#F0F1F6; }
+  #rp-apply{ background:#4E5FFF; border:none; color:#fff; }
+  #rp-apply:active{ background:#3D4EDB; }
+  .iu-footer{ position:absolute; bottom:0; left:0; right:0; padding:12px 16px 16px; background:#fff;
+    border-top:1px solid var(--line); }
+  #send-invite-btn{ display:block; width:100%; padding:14px; border:none; border-radius:12px;
+    background:#4E5FFF; color:#fff; font-size:15px; font-weight:700; cursor:pointer;
+    font-family:inherit; min-height:48px; -webkit-tap-highlight-color:transparent; }
+  #send-invite-btn:active{ background:#3D4EDB; }
+
+  /* Edit User page */
+  #edit-user-view{ position:absolute; top:52px; bottom:0; left:0; right:0; z-index:39;
+    background:#F4F5F9; display:flex; flex-direction:column;
+    transform:translateX(100%); transition:transform .3s cubic-bezier(.32,.72,0,1); }
+  #edit-user-view.hidden{ transform:translateX(100%); pointer-events:none; }
+  #edit-user-view:not(.hidden){ transform:translateX(0); }
+  .iu-input:disabled, .iu-input[readonly]{ background:#EDEDF0; color:#A0A4AE; border-color:#E3E4E8;
+    cursor:not-allowed; -webkit-text-fill-color:#A0A4AE; opacity:1; }
+  #update-user-btn{ display:block; width:100%; padding:14px; border:none; border-radius:12px;
+    background:#4E5FFF; color:#fff; font-size:15px; font-weight:700; cursor:pointer;
+    font-family:inherit; min-height:48px; -webkit-tap-highlight-color:transparent; }
+  #update-user-btn:active{ background:#3D4EDB; }
 
   /* AI onboarding setup */
   .ai-progress{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; }
@@ -450,6 +611,22 @@
   .hpv-metric-label{ font-size:11.5px; color:var(--muted); font-weight:500; }
   .hpv-metric-value{ font-size:17px; font-weight:700; color:var(--ink); margin-top:2px; letter-spacing:-.3px; }
   .hpv-empty{ text-align:center; color:var(--muted); font-size:14px; padding:40px 20px; }
+
+  /* Account detail (guest side) — slide-in, read-only email */
+  #acct-view{ position:absolute; top:52px; bottom:0; left:0; right:0; z-index:32; background:#F4F5F9;
+    display:flex; flex-direction:column; transform:translateX(100%); transition:transform .3s cubic-bezier(.32,.72,0,1); }
+  #acct-view.hidden{ transform:translateX(100%); pointer-events:none; }
+  #acct-view:not(.hidden){ transform:translateX(0); }
+  .acct-email-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .acct-email-lock{ flex:0 0 auto; color:var(--muted); display:flex; }
+  .acct-email-note{ font-size:11.5px; color:var(--muted); margin-top:6px; }
+
+  /* sign-out confirmation sheet */
+  .so-copy{ font-size:13.5px; color:var(--muted); line-height:1.55; text-align:center; margin:6px 4px 4px; }
+  .so-btn{ width:100%; height:52px; border-radius:26px; font-family:inherit; font-size:16px; font-weight:600;
+    cursor:pointer; margin-top:14px; border:none; }
+  .so-btn.danger{ background:#E5564E; color:#fff; box-shadow:0 8px 20px rgba(229,86,78,.3); }
+  .so-btn.secondary{ background:#F4F5F9; color:var(--ink); box-shadow:none; }
 
   /* search results overlay — replaces the scroll area when active */
   #search-results-overlay{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
@@ -567,7 +744,7 @@
   .ai-pub-btns .b.ghost{ background:#fff; color:var(--ink); border:1px solid var(--line); }
 
   /* ===== Property detail (drill-in) — floating section pill over app tab bar ===== */
-  #ai-property{ z-index:35; top:52px; bottom:88px; background:#F4F5F9; flex-direction:column; }
+  #ai-property{ z-index:35; top:52px; bottom:0; background:#F4F5F9; flex-direction:column; }
   .prop-head{ flex:0 0 auto; background:#fff; padding:12px 14px 14px; border-bottom:1px solid var(--line); }
   .prop-appbar{ display:flex; align-items:center; gap:10px; }
   .prop-back{ flex:0 0 auto; display:flex; align-items:center; background:none; border:none; cursor:pointer; color:var(--ink); padding:0; }
@@ -581,7 +758,7 @@
      ========================================================= */
 
   /* --- Shared chrome --- */
-  #ai-property{ z-index:35; top:52px; bottom:88px; background:#F4F5F9; flex-direction:column; }
+  #ai-property{ z-index:35; top:52px; bottom:0; background:#F4F5F9; flex-direction:column; }
   .prop-head{ flex:0 0 auto; background:#fff; padding:12px 14px 0; }
   .prop-appbar{ display:flex; align-items:center; gap:10px; padding-bottom:12px; }
   .prop-back{ flex:0 0 auto; display:flex; align-items:center; background:none; border:none; cursor:pointer; color:var(--ink); padding:0; }
@@ -599,50 +776,20 @@
   .action-sheet-option .opt-label{ font-size:16px; font-weight:500; color:var(--ink); }
   .action-sheet-option .opt-icon{ flex:0 0 auto; color:#9AA0AB; display:flex; }
 
-  /* variant toggle (prototype-only affordance) */
-  .variant-toggle{ display:flex; align-items:center; gap:7px; padding:8px 14px; border-top:1px solid var(--line); }
-  .variant-toggle span{ font-size:11px; color:var(--muted); font-weight:500; }
-  .vtbtn{ padding:5px 11px; border-radius:14px; border:1px solid var(--line); background:#fff; font-family:inherit;
-    font-size:11.5px; font-weight:600; color:var(--muted); cursor:pointer; }
-  .vtbtn.active{ background:#4E5FFF; border-color:#4E5FFF; color:#fff; }
-
-  /* --- VARIANT A: Dropdown pill --- */
-  .prop-dropdown-bar{ display:none; align-items:center; justify-content:space-between; padding:10px 14px;
-    border-bottom:1px solid var(--line); background:#fff; }
-  .prop-dropdown-bar.visible{ display:flex; }
-  .prop-dropdown-pill{ display:inline-flex; align-items:center; gap:8px; background:#F4F5F9; border:1px solid #DDE0E8;
-    border-radius:22px; padding:9px 15px; cursor:pointer; border:none; font-family:inherit; }
-  .prop-dropdown-pill .mod-label{ font-size:14px; font-weight:700; color:var(--ink); }
-  .prop-dropdown-pill .chev{ color:var(--muted); display:flex; transition:transform .2s; }
-  .prop-dropdown-pill.open .chev{ transform:rotate(180deg); }
-  .prop-date-chip{ display:inline-flex; align-items:center; gap:6px; background:#fff; border:1px solid var(--line); border-radius:10px; padding:7px 11px; font-size:11.5px; color:var(--muted); cursor:pointer; }
-
-  /* module picker sheet (dropdown → bottom sheet) */
-  #module-sheet{ z-index:45; }
-  .module-option{ display:flex; align-items:center; gap:12px; padding:14px 8px; border-bottom:1px solid var(--line-soft);
-    cursor:pointer; border:none; background:none; width:100%; font-family:inherit; text-align:left; }
-  .module-option:last-child{ border-bottom:none; }
-  .module-icon{ width:40px; height:40px; border-radius:11px; background:#EBEEFF; flex:0 0 auto; display:flex; align-items:center; justify-content:center; }
-  .module-option .m-name{ font-size:15.5px; font-weight:600; color:var(--ink); }
-  .module-option .m-sub{ font-size:12.5px; color:var(--muted); margin-top:1px; }
-  .module-check{ flex:0 0 auto; margin-left:auto; color:#4E5FFF; display:none; }
-  .module-option.active .module-check{ display:flex; }
-
-  /* --- VARIANT B: Segmented control --- */
-  .prop-segment-bar{ display:none; padding:10px 14px; background:#fff; border-bottom:1px solid var(--line); }
-  .prop-segment-bar.visible{ display:block; }
+  /* --- Segmented control: primary section switch (QR / Lobby / Front Desk) --- */
+  .prop-segment-bar{ padding:12px 14px; background:#fff; border-bottom:1px solid var(--line); }
   .prop-segment{ display:flex; background:#F0F1F7; border-radius:14px; padding:3px; gap:2px; }
   .prop-seg-btn{ flex:1; padding:9px 4px; border-radius:11px; border:none; background:none; font-family:inherit;
-    font-size:12px; font-weight:600; color:var(--muted); cursor:pointer; text-align:center; transition:background .15s, color .15s; }
+    font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; text-align:center; transition:background .15s, color .15s; }
   .prop-seg-btn.active{ background:#fff; color:#4E5FFF; box-shadow:0 1px 4px rgba(20,20,50,.12); }
 
-  /* --- Shared Tier 2 underline tabs --- */
-  .prop-subtabs{ flex:0 0 auto; display:flex; gap:0; overflow-x:auto; padding:0 14px; background:#fff; border-bottom:1px solid var(--line); }
+  /* --- Secondary chip tabs: QR content views, deliberately lighter-weight than the segmented control above --- */
+  .prop-subtabs{ flex:0 0 auto; display:flex; gap:8px; overflow-x:auto; padding:10px 14px; background:#F8F8FB; border-bottom:1px solid var(--line); }
   .prop-subtabs::-webkit-scrollbar{ display:none; }
-  .prop-subtab{ flex:0 0 auto; padding:11px 12px 10px; margin-bottom:-1px; background:none; border:none;
-    border-bottom:2px solid transparent; font-size:13px; font-weight:600; color:var(--muted);
-    cursor:pointer; font-family:inherit; white-space:nowrap; }
-  .prop-subtab.active{ color:#4E5FFF; border-bottom-color:#4E5FFF; }
+  .prop-subtab{ flex:0 0 auto; padding:7px 14px; border-radius:20px; background:#fff; border:1px solid var(--line);
+    font-size:12.5px; font-weight:600; color:var(--muted); cursor:pointer; font-family:inherit; white-space:nowrap;
+    transition:background .15s, color .15s, border-color .15s; }
+  .prop-subtab.active{ color:#fff; background:#4E5FFF; border-color:#4E5FFF; }
 
   /* --- Content --- */
   .prop-scroll{ flex:1; overflow-y:auto; padding:14px 14px 20px; }
@@ -652,6 +799,41 @@
 
   .psum-daterange{ display:inline-flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--line);
     border-radius:10px; padding:8px 12px; font-size:12px; color:var(--muted); margin-bottom:14px; }
+
+  /* Global date pill */
+  .global-date-bar{ display:none; padding:8px 14px; background:#F4F5F9; }
+  .global-date-bar.visible{ display:block; }
+  #global-date-picker-trigger{ display:inline-flex; align-items:center; gap:6px; min-height:44px; padding:0 16px;
+    border-radius:22px; background:#fff; border:1px solid var(--line); font-size:13px; font-weight:600;
+    color:var(--ink); cursor:pointer; font-family:inherit; -webkit-tap-highlight-color:transparent; }
+  #global-date-picker-trigger:active{ background:#F0F1F6; }
+
+  /* Calendar bottom sheet */
+  #date-sheet-backdrop{ display:none; position:absolute; inset:0; background:rgba(0,0,0,.35); z-index:60; }
+  #date-sheet-backdrop.open{ display:block; }
+  #date-bottom-sheet{ position:absolute; bottom:0; left:0; right:0; z-index:61; background:#fff;
+    border-radius:16px 16px 0 0; transform:translateY(100%); transition:transform .3s ease;
+    display:flex; flex-direction:column; max-height:80%; }
+  #date-bottom-sheet.open{ transform:translateY(0); }
+  .ds-header{ display:flex; align-items:center; padding:14px 16px; border-bottom:1px solid var(--line); }
+  .ds-close{ width:32px; height:32px; display:flex; align-items:center; justify-content:center; border:none; background:none;
+    cursor:pointer; font-size:18px; color:var(--ink); font-family:inherit; border-radius:8px; }
+  .ds-close:active{ background:#F0F1F6; }
+  .ds-header-title{ flex:1; text-align:center; font-size:15px; font-weight:700; color:var(--ink); padding-right:32px; }
+  .ds-body{ flex:1; overflow-y:auto; padding:16px; }
+  .ds-month-label{ text-align:center; font-size:14px; font-weight:700; color:var(--ink); margin-bottom:12px; }
+  .ds-weekdays{ display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-size:11px; font-weight:600;
+    color:var(--muted); margin-bottom:6px; }
+  .ds-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px 0; text-align:center; }
+  .ds-day{ height:36px; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--ink); border-radius:50%; }
+  .ds-day.empty{ visibility:hidden; }
+  .ds-day.in-range{ background:#EEF0FF; border-radius:0; color:#4E5FFF; font-weight:600; }
+  .ds-day.range-start{ background:#4E5FFF; color:#fff; border-radius:50% 0 0 50%; font-weight:700; }
+  .ds-day.range-end{ background:#4E5FFF; color:#fff; border-radius:0 50% 50% 0; font-weight:700; }
+  .ds-footer{ padding:12px 16px; border-top:1px solid var(--line); }
+  #apply-date-btn{ width:100%; padding:14px; border:none; border-radius:12px; background:#4E5FFF; color:#fff;
+    font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; -webkit-tap-highlight-color:transparent; }
+  #apply-date-btn:active{ background:#3D4EDB; }
   .psum-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .psum-card{ position:relative; background:#fff; border:1px solid var(--line); border-radius:13px; padding:13px; }
   .psum-card .ic{ position:absolute; top:11px; right:11px; color:#C4C8D2; }
@@ -772,18 +954,15 @@
   .gc-viewport{ overflow-y:auto; -webkit-overflow-scrolling:touch; }
   .gc-viewport::-webkit-scrollbar{ display:none; }
   .gc-summary{ padding:7px 16px; font-size:12px; color:var(--muted); background:#F4F5F9; border-bottom:1px solid var(--line-soft); }
-  .gc-row{ display:flex; align-items:center; gap:10px; padding:9px 16px; height:60px; border-bottom:1px solid var(--line-soft); cursor:pointer; background:#fff; }
+  .gc-row{ display:flex; flex-direction:column; justify-content:center; gap:4px; padding:9px 16px; height:60px; border-bottom:1px solid var(--line-soft); cursor:pointer; background:#fff; }
   .gc-row:active{ background:#F4F5FB; }
   .gc-row.unread{ border-left:3px solid #4E5FFF; }
-  .gc-left{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; justify-content:center; }
-  .gc-hotel{ font-size:13.5px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; gap:5px; }
-  .gc-sn-dot{ width:6px; height:6px; border-radius:50%; background:#7A5CF0; flex:0 0 6px; }
+  .gc-top-line{ display:flex; align-items:center; justify-content:space-between; }
+  .gc-bottom-line{ display:flex; align-items:center; justify-content:space-between; }
+  .gc-hotel{ font-size:13.5px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .gc-time{ font-size:11.5px; color:#B4B9C2; white-space:nowrap; flex:0 0 auto; padding-left:8px; }
   .gc-guest{ font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .gc-center{ flex:0 0 auto; font-size:11.5px; color:#B4B9C2; padding:0 8px; white-space:nowrap; }
-  .gc-right{ flex:0 0 auto; }
-  .gc-pill{ font-size:11px; font-weight:600; padding:3px 8px; border-radius:8px; white-space:nowrap; }
-  .gc-pill.needs{ background:#FEF3E2; color:#B45309; }
-  .gc-pill.replied{ background:#F3F4F6; color:#6B7280; }
+  .gc-unread-dot{ width:8px; height:8px; border-radius:50%; background:#4E5FFF; flex:0 0 8px; margin-left:8px; }
 
   #lobbychat-overlay{ display:none; position:absolute; top:52px; bottom:88px; left:0; right:0; z-index:39; background:#F4F5F9; flex-direction:column; }
   #lobbychat-overlay.open{ display:flex; }
@@ -1158,7 +1337,10 @@
 
   /* Step 1 — Login */
   .login-hero{ background:linear-gradient(165deg,var(--lavender) 0%,#D5D0F8 50%,#C4BEFA 100%);
-    padding:52px 28px 40px; text-align:center; }
+    padding:52px 28px 40px; text-align:center; position:relative; }
+  .login-back{ position:absolute; top:14px; left:14px; display:flex; align-items:center;
+    justify-content:center; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.55);
+    border:none; cursor:pointer; color:var(--ink); }
   .login-wordmark{ font-size:32px; font-weight:700; color:var(--brand-ink); letter-spacing:-.5px; }
   .login-wordmark span{ color:var(--brand); }
   .login-sub{ font-size:14px; color:#5a5370; margin-top:8px; }
@@ -1245,7 +1427,7 @@
   <div class="fitwrap">
     <div class="artboard-label">Travel planner</div>
     <div class="stage">
-      <div class="phone pre-app">
+      <div class="phone">
 
         <!-- status bar (fixed chrome) -->
         <div class="statusbar">
@@ -1258,15 +1440,16 @@
         </div>
 
         <!-- ===== Step 1: Login ===== -->
-        <div id="login-screen" class="preapp-overlay">
+        <div id="login-screen" class="preapp-overlay hidden">
           <div class="login-hero">
+            <button class="login-back" id="login-back" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             <div class="login-wordmark">Stay<span>Now</span></div>
             <div class="login-sub">Your travel companion</div>
           </div>
           <div class="login-body">
             <div class="login-field">
               <div class="login-label">Email</div>
-              <input class="login-input" type="email" value="bella.swan@staynow.com" />
+              <input class="login-input" id="login-email" type="email" value="bella.swan@staynow.com" />
             </div>
             <div class="login-field">
               <div class="login-label">Password</div>
@@ -1275,72 +1458,6 @@
             <div class="login-forgot">Forgot password?</div>
             <button class="login-btn" id="login-btn">Sign in</button>
             <div class="login-footer">Don't have an account? <a href="#">Sign up</a></div>
-          </div>
-        </div>
-
-        <!-- ===== Step 2: Switcher Education ===== -->
-        <div id="edu-screen" class="preapp-overlay hidden">
-          <div class="edu-body">
-            <div class="ob-eyebrow">One account, two experiences</div>
-            <div class="ob-heading">Switch anytime<br>from your Profile</div>
-
-            <!-- inline illustration: tab bar → arrow → bottom sheet -->
-            <div class="edu-illus">
-              <div class="edu-sheet">
-                <div class="edu-sheet-handle"></div>
-                <div class="edu-sheet-row">
-                  <span class="edu-sheet-ava person"></span>
-                  <span class="edu-sheet-text">
-                    <span class="edu-sheet-name">Bella Swan</span>
-                    <span class="edu-sheet-sub">Personal &middot; Traveler</span>
-                  </span>
-                  <span class="edu-sheet-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                </div>
-                <div class="edu-sheet-row">
-                  <span class="edu-sheet-ava admin-ava"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M4 21V6a1 1 0 011-1h6v16M11 9h8a1 1 0 011 1v11M4 21h18" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  <span class="edu-sheet-text">
-                    <span class="edu-sheet-name">Hotel Admin</span>
-                    <span class="edu-sheet-sub">Manage your property</span>
-                  </span>
-                </div>
-              </div>
-              <div class="edu-arrow"></div>
-              <div class="edu-tabbar">
-                <span class="edu-tab"><span class="dot"></span>Home</span>
-                <span class="edu-tab"><span class="dot"></span>Chats</span>
-                <span class="edu-tab"><span class="dot"></span>Trips</span>
-                <span class="edu-tab active"><span class="dot"></span>Profile</span>
-              </div>
-            </div>
-
-            <div class="edu-subcopy">Tap <strong>Profile</strong> &rarr; tap your name to switch between Traveler and Hotel Admin views at any time.</div>
-            <button class="edu-btn" id="edu-gotit">Got it</button>
-          </div>
-        </div>
-
-        <!-- ===== Step 3: Mode Choice ===== -->
-        <div id="choice-screen" class="preapp-overlay hidden">
-          <div class="choice-body">
-            <div class="ob-eyebrow">You're all set</div>
-            <div class="ob-heading">Where would you like<br>to start?</div>
-            <div class="ob-cards">
-              <div class="ob-card" id="ob-traveler">
-                <div class="ob-card-icon traveler"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.6 4.9L18.5 9.5l-4.9 1.6L12 16l-1.6-4.9L5.5 9.5l4.9-1.6L12 3z" fill="#7A5CF0"/><path d="M19 4l.7 2 2 .7-2 .7L19 9.4l-.7-2-2-.7 2-.7L19 4z" fill="#7A5CF0"/></svg></div>
-                <div class="ob-card-body">
-                  <div class="ob-card-title">Continue as Traveler</div>
-                  <div class="ob-card-desc">Plan trips, browse hotels, and manage your bookings.</div>
-                </div>
-                <span class="ob-card-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              </div>
-              <div class="ob-card" id="ob-admin">
-                <div class="ob-card-icon admin"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 21V6a1 1 0 011-1h6v16M11 9h8a1 1 0 011 1v11M4 21h18M7 9h.01M7 13h.01M15 13h.01M15 17h.01" stroke="#4E5FFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                <div class="ob-card-body">
-                  <div class="ob-card-title">Open Hotel Admin</div>
-                  <div class="ob-card-desc">Manage your property, monitor guest chats, and track QR performance.</div>
-                </div>
-                <span class="ob-card-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -1657,6 +1774,52 @@
 
           <!-- ===== PROFILE ===== -->
           <div class="panel" id="panel-profile">
+
+            <!-- ===== Logged-out state: Login + Support only ===== -->
+            <div id="profile-loggedout">
+              <div class="profile-guest-header">
+                <h1>Profile</h1>
+                <p>Log in to view your bookings, rewards &amp; account</p>
+              </div>
+              <div class="login-row">
+                <div class="menu-card" id="profile-login-btn">
+                  <div class="menu-tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 3h4a1 1 0 011 1v16a1 1 0 01-1 1h-4M10 17l5-5-5-5M4 12h11" stroke="#7A5CF0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  <div class="menu-text"><div class="menu-title">Log In</div><div class="menu-sub">Access your account &amp; bookings</div></div>
+                  <span class="menu-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </div>
+              </div>
+
+              <div class="profile-body" style="padding-top:2px;">
+                <div class="support-label">Support</div>
+
+                <div class="menu-card">
+                  <div class="menu-plainicon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2b2b30" stroke-width="1.6"/><circle cx="12" cy="12" r="3.6" stroke="#2b2b30" stroke-width="1.6"/><path d="M5 5l3.9 3.9M19 5l-3.9 3.9M5 19l3.9-3.9M19 19l-3.9-3.9" stroke="#2b2b30" stroke-width="1.5"/></svg></div>
+                  <div class="menu-text"><div class="menu-title">Help &amp; Support</div></div>
+                  <span class="menu-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </div>
+
+                <div class="menu-card">
+                  <div class="menu-plainicon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#2b2b30" stroke-width="1.6"/><path d="M14 3v4h4M8 12h8M8 16h5" stroke="#2b2b30" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+                  <div class="menu-text"><div class="menu-title">Privacy Policy</div></div>
+                  <span class="menu-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </div>
+
+                <div class="menu-card">
+                  <div class="menu-plainicon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#2b2b30" stroke-width="1.6"/><path d="M14 3v4h4M8 12h8M8 16h5" stroke="#2b2b30" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+                  <div class="menu-text"><div class="menu-title">Terms of Service</div></div>
+                  <span class="menu-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </div>
+
+                <div class="menu-card">
+                  <div class="menu-plainicon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M4 5h16a1 1 0 011 1v9a1 1 0 01-1 1H10l-4 4V6a1 1 0 011-1z" stroke="#2b2b30" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+                  <div class="menu-text"><div class="menu-title">Chat with us</div></div>
+                  <span class="menu-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </div>
+              </div>
+            </div><!-- /profile-loggedout -->
+
+            <!-- ===== Logged-in state: full profile ===== -->
+            <div id="profile-loggedin" style="display:none;">
             <div class="profile-header">
               <div class="profile-top">
                 <div>
@@ -1704,7 +1867,7 @@
             <div class="profile-body">
 
               <!-- main group -->
-              <div class="menu-card">
+              <div class="menu-card" id="acct-open-btn">
                 <div class="menu-tile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="#7A5CF0" stroke-width="1.6"/><circle cx="8.5" cy="11" r="2" stroke="#7A5CF0" stroke-width="1.6"/><path d="M5.5 16.3c.4-1.5 1.6-2.3 3-2.3s2.6.8 3 2.3" stroke="#7A5CF0" stroke-width="1.5" stroke-linecap="round"/><path d="M14 10h4M14 13.5h4" stroke="#7A5CF0" stroke-width="1.6" stroke-linecap="round"/></svg></div>
                 <div class="menu-text"><div class="menu-title">Account</div><div class="menu-sub">Personal Details &amp; Account Security</div></div>
                 <span class="menu-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -1761,12 +1924,52 @@
                 <span class="menu-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </div>
 
-              <button class="signout">Sign Out</button>
+              <button class="signout" id="signout-btn">Sign Out</button>
 
             </div>
+            </div><!-- /profile-loggedin -->
           </div><!-- /panel-profile -->
 
         </div><!-- /screen -->
+
+        <!-- Account detail (Profile → Account) -->
+        <div id="acct-view" class="hidden">
+          <div class="hpv-header">
+            <div class="hpv-topbar">
+              <button class="hpv-back" id="acct-back" aria-label="Back"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <h1>Account</h1>
+              <div class="hpv-topbar-spacer"></div>
+            </div>
+          </div>
+          <div class="hpv-scroll">
+            <div class="hi-section">
+              <div class="hi-section-head"><h3>Personal Details</h3></div>
+              <div class="hi-field">
+                <div class="hi-label">Name</div>
+                <div class="hi-value" id="acct-name-value">Bella Swan</div>
+              </div>
+              <div class="hi-field">
+                <div class="hi-label">Email</div>
+                <div class="hi-value acct-email-row">
+                  <span id="acct-email-value">bella.swan@staynow.com</span>
+                  <span class="acct-email-lock"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.6"/></svg></span>
+                </div>
+                <div class="acct-email-note">Email can't be changed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sign-out confirmation sheet -->
+        <div class="sheet-backdrop" id="signout-backdrop"></div>
+        <div class="sheet" id="signout-sheet">
+          <div class="sheet-handle"></div>
+          <div class="lw-title" style="text-align:center;">Sign out of StayNow?</div>
+          <div class="so-copy">You'll be signed out of both the Traveler and Hotel Admin experiences. To open Hotel Admin again, you'll need to sign in with your email.</div>
+          <button class="so-btn danger" id="signout-confirm-btn">Sign Out</button>
+          <button class="so-btn secondary" id="signout-cancel-btn">Cancel</button>
+        </div>
+
 
         <!-- tab bar -->
         <nav class="tabbar">
@@ -1921,7 +2124,7 @@
               <button class="gc-tab" data-filter="replied">Replied</button>
             </div>
 
-            <div class="gc-summary" id="gc-summary">40 conversations</div>
+            <div class="gc-summary" id="gc-summary" style="display:none">40 conversations</div>
             <div id="gc-dom-rows"></div>
           </div>
 
@@ -2009,7 +2212,7 @@
 
           <!-- More (rest of the sidebar + switch back to Traveler) -->
           <div class="admin-panel" id="admin-more">
-            <div class="admin-topbar"><h1>More</h1></div>
+            <div class="admin-topbar"><h1>Profile</h1></div>
             <div class="admin-body">
               <button class="admin-account" id="open-switcher-admin">
                 <span class="aa-ava"></span>
@@ -2020,17 +2223,349 @@
                 <span class="aa-switch"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 4L3 8l4 4M3 8h13M17 20l4-4-4-4M21 16H8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </button>
 
-              <div class="admin-section-label">Manage</div>
+              <div class="admin-section-label">Management</div>
 
-              <div class="menu-card">
-                <div class="menu-tile indigo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2.5" stroke="#4E5FFF" stroke-width="1.7"/><path d="M3 10h18M7 15h4" stroke="#4E5FFF" stroke-width="1.7" stroke-linecap="round"/></svg></div>
-                <div class="menu-text"><div class="menu-title">Billing</div><div class="menu-sub">Plans, invoices &amp; payments</div></div>
+              <div class="menu-card" id="open-user-management">
+                <div class="menu-tile indigo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="3.5" stroke="#4E5FFF" stroke-width="1.6"/><path d="M3 20c0-3.5 2.7-5.5 6-5.5s6 2 6 5.5" stroke="#4E5FFF" stroke-width="1.6" stroke-linecap="round"/><circle cx="18" cy="8" r="2.5" stroke="#4E5FFF" stroke-width="1.4"/><path d="M18 13c2.5 0 4.5 1.5 4.5 4" stroke="#4E5FFF" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+                <div class="menu-text"><div class="menu-title">User Management</div><div class="menu-sub">Invite, manage roles &amp; permissions</div></div>
                 <span class="menu-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </div>
+
+              <div class="admin-section-label">Account</div>
+
+              <div class="menu-card" id="admin-acct-open-btn">
+                <div class="menu-tile indigo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="#4E5FFF" stroke-width="1.6"/><circle cx="8.5" cy="11" r="2" stroke="#4E5FFF" stroke-width="1.6"/><path d="M5.5 16.3c.4-1.5 1.6-2.3 3-2.3s2.6.8 3 2.3" stroke="#4E5FFF" stroke-width="1.5" stroke-linecap="round"/><path d="M14 10h4M14 13.5h4" stroke="#4E5FFF" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+                <div class="menu-text"><div class="menu-title">Account</div><div class="menu-sub">Personal Details &amp; Account Security</div></div>
+                <span class="menu-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+
+              <button class="signout" id="admin-signout-btn" style="margin-top:22px;">Sign Out</button>
             </div>
           </div>
 
         </div><!-- /admin-shell -->
+
+        <!-- User Management sub-page -->
+        <div id="user-management-view" class="hidden">
+          <div class="um-header">
+            <div class="um-topbar">
+              <button class="um-back" id="um-back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <h1>User Management</h1>
+              <div class="um-topbar-spacer"></div>
+            </div>
+            <div class="um-toolbar">
+              <div class="um-searchbar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#A6AAB2" stroke-width="1.7"/><path d="M20 20l-4-4" stroke="#A6AAB2" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <input type="text" id="user-search" placeholder="Search users or hotels..." />
+              </div>
+              <button class="um-invite-btn">+ Invite</button>
+            </div>
+          </div>
+          <div class="um-scroll" id="um-scroll">
+
+            <div class="um-card" data-searchable="lincoln siphron marriott times square">
+              <div class="um-card-top">
+                <div class="um-card-info"><div class="um-card-name">Lincoln Siphron</div><div class="um-card-email">lincoln.s@marriott.com</div></div>
+                <div class="um-card-top-right"><span class="um-badge-pending">Pending</span><button class="um-menu-trigger">⋮</button></div>
+              </div>
+              <div class="um-card-meta"><strong>Hotel:</strong> Marriott Times Square<br><strong>Role:</strong> General Manager · <strong>Last Login:</strong> Jul 01, 2026</div>
+            </div>
+
+            <div class="um-card" data-searchable="maria gonzalez hyatt regency chicago">
+              <div class="um-card-top">
+                <div class="um-card-info"><div class="um-card-name">Maria Gonzalez</div><div class="um-card-email">m.gonzalez@hyatt.com</div></div>
+                <div class="um-card-top-right"><button class="um-menu-trigger">⋮</button></div>
+              </div>
+              <div class="um-card-meta"><strong>Hotel:</strong> Hyatt Regency Chicago<br><strong>Role:</strong> Front Desk Lead · <strong>Last Login:</strong> Jun 28, 2026</div>
+            </div>
+
+            <div class="um-card" data-searchable="james cho ritz-carlton san francisco">
+              <div class="um-card-top">
+                <div class="um-card-info"><div class="um-card-name">James Cho</div><div class="um-card-email">j.cho@ritzcarlton.com</div></div>
+                <div class="um-card-top-right"><span class="um-badge-pending">Pending</span><button class="um-menu-trigger">⋮</button></div>
+              </div>
+              <div class="um-card-meta"><strong>Hotel:</strong> Ritz-Carlton San Francisco<br><strong>Role:</strong> Operations Manager · <strong>Last Login:</strong> Jun 30, 2026</div>
+            </div>
+
+            <div class="um-card" data-searchable="priya patel four seasons miami">
+              <div class="um-card-top">
+                <div class="um-card-info"><div class="um-card-name">Priya Patel</div><div class="um-card-email">priya.p@fourseasons.com</div></div>
+                <div class="um-card-top-right"><button class="um-menu-trigger">⋮</button></div>
+              </div>
+              <div class="um-card-meta"><strong>Hotel:</strong> Four Seasons Miami<br><strong>Role:</strong> Guest Relations · <strong>Last Login:</strong> Jul 03, 2026</div>
+            </div>
+
+            <div class="um-card" data-searchable="daniel wright hilton downtown la">
+              <div class="um-card-top">
+                <div class="um-card-info"><div class="um-card-name">Daniel Wright</div><div class="um-card-email">d.wright@hilton.com</div></div>
+                <div class="um-card-top-right"><button class="um-menu-trigger">⋮</button></div>
+              </div>
+              <div class="um-card-meta"><strong>Hotel:</strong> Hilton Downtown LA<br><strong>Role:</strong> Night Auditor · <strong>Last Login:</strong> Jun 25, 2026</div>
+            </div>
+
+            <div class="um-card" data-searchable="sophia martinez w hotel dallas">
+              <div class="um-card-top">
+                <div class="um-card-info"><div class="um-card-name">Sophia Martinez</div><div class="um-card-email">sophia.m@whotels.com</div></div>
+                <div class="um-card-top-right"><span class="um-badge-pending">Pending</span><button class="um-menu-trigger">⋮</button></div>
+              </div>
+              <div class="um-card-meta"><strong>Hotel:</strong> W Hotel Dallas<br><strong>Role:</strong> Concierge · <strong>Last Login:</strong> Jul 05, 2026</div>
+            </div>
+
+            <div class="um-card" data-searchable="ahmed hassan sheraton boston">
+              <div class="um-card-top">
+                <div class="um-card-info"><div class="um-card-name">Ahmed Hassan</div><div class="um-card-email">a.hassan@sheraton.com</div></div>
+                <div class="um-card-top-right"><button class="um-menu-trigger">⋮</button></div>
+              </div>
+              <div class="um-card-meta"><strong>Hotel:</strong> Sheraton Boston<br><strong>Role:</strong> Revenue Manager · <strong>Last Login:</strong> Jun 29, 2026</div>
+            </div>
+
+            <div class="um-card" data-searchable="emily watson westin seattle">
+              <div class="um-card-top">
+                <div class="um-card-info"><div class="um-card-name">Emily Watson</div><div class="um-card-email">e.watson@westin.com</div></div>
+                <div class="um-card-top-right"><button class="um-menu-trigger">⋮</button></div>
+              </div>
+              <div class="um-card-meta"><strong>Hotel:</strong> Westin Seattle<br><strong>Role:</strong> Housekeeping Lead · <strong>Last Login:</strong> Jul 02, 2026</div>
+            </div>
+
+            <div class="um-card" data-searchable="ryan nakamura intercontinental dc">
+              <div class="um-card-top">
+                <div class="um-card-info"><div class="um-card-name">Ryan Nakamura</div><div class="um-card-email">r.nakamura@ihg.com</div></div>
+                <div class="um-card-top-right"><span class="um-badge-pending">Pending</span><button class="um-menu-trigger">⋮</button></div>
+              </div>
+              <div class="um-card-meta"><strong>Hotel:</strong> InterContinental DC<br><strong>Role:</strong> IT Admin · <strong>Last Login:</strong> Jun 27, 2026</div>
+            </div>
+
+            <div class="um-card" data-searchable="olivia chen crowne plaza atlanta">
+              <div class="um-card-top">
+                <div class="um-card-info"><div class="um-card-name">Olivia Chen</div><div class="um-card-email">o.chen@crowneplaza.com</div></div>
+                <div class="um-card-top-right"><button class="um-menu-trigger">⋮</button></div>
+              </div>
+              <div class="um-card-meta"><strong>Hotel:</strong> Crowne Plaza Atlanta<br><strong>Role:</strong> Front Desk Agent · <strong>Last Login:</strong> Jul 06, 2026</div>
+            </div>
+
+          </div>
+
+          <!-- User action sheet -->
+          <div id="um-sheet-backdrop"></div>
+          <div id="user-action-sheet">
+            <button class="uas-option" id="uas-edit">✏️ Edit User</button>
+            <button class="uas-option danger" id="uas-delete">🗑️ Delete User</button>
+          </div>
+        </div>
+
+        <!-- Invite User full-screen page -->
+        <div id="invite-user-view" class="hidden">
+          <div class="iu-header">
+            <div class="iu-topbar">
+              <button class="iu-back" id="iu-back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <h1>Invite User</h1>
+              <div class="iu-topbar-spacer"></div>
+            </div>
+          </div>
+          <div class="iu-scroll">
+
+            <div class="iu-section-label">User Details</div>
+            <div class="iu-form-card">
+              <div class="iu-field">
+                <label class="iu-label">First Name <span class="req">*</span></label>
+                <input class="iu-input" type="text" placeholder="Enter first name" />
+              </div>
+              <div class="iu-field">
+                <label class="iu-label">Last Name <span class="req">*</span></label>
+                <input class="iu-input" type="text" placeholder="Enter last name" />
+              </div>
+              <div class="iu-field">
+                <label class="iu-label">Email Address <span class="req">*</span></label>
+                <input class="iu-input" type="email" placeholder="name@company.com" />
+              </div>
+            </div>
+
+            <div class="iu-section-label">Properties and Roles</div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" />
+                <span class="iu-prop-name">Fountaine Downtown</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Fountaine Downtown<br><strong>Location:</strong> 120 Main St, Austin, TX 78701</div>
+                <div class="mobile-role-trigger" data-selected="Select Role"><span class="role-label">Select Role</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" />
+                <span class="iu-prop-name">Hyatt Hotels</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Hyatt Hotels<br><strong>Location:</strong> 71 S Wacker Dr, Chicago, IL 60606</div>
+                <div class="mobile-role-trigger" data-selected="Select Role"><span class="role-label">Select Role</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" />
+                <span class="iu-prop-name">Marriott Times Square</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Marriott Times Square<br><strong>Location:</strong> 1535 Broadway, New York, NY 10036</div>
+                <div class="mobile-role-trigger" data-selected="Select Role"><span class="role-label">Select Role</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" />
+                <span class="iu-prop-name">Ritz-Carlton San Francisco</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Ritz-Carlton San Francisco<br><strong>Location:</strong> 600 Stockton St, San Francisco, CA 94108</div>
+                <div class="mobile-role-trigger" data-selected="Select Role"><span class="role-label">Select Role</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" />
+                <span class="iu-prop-name">Four Seasons Miami</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Four Seasons Miami<br><strong>Location:</strong> 1435 Brickell Ave, Miami, FL 33131</div>
+                <div class="mobile-role-trigger" data-selected="Select Role"><span class="role-label">Select Role</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" />
+                <span class="iu-prop-name">Hilton Downtown LA</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Hilton Downtown LA<br><strong>Location:</strong> 555 S Figueroa St, Los Angeles, CA 90071</div>
+                <div class="mobile-role-trigger" data-selected="Select Role"><span class="role-label">Select Role</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+          </div>
+          <div class="iu-footer">
+            <button id="send-invite-btn">Send Invite</button>
+          </div>
+        </div>
+
+        <!-- Edit / Manage User full-screen page -->
+        <div id="edit-user-view" class="hidden">
+          <div class="iu-header">
+            <div class="iu-topbar">
+              <button class="iu-back" id="eu-back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <h1>Manage User</h1>
+              <div class="iu-topbar-spacer"></div>
+            </div>
+          </div>
+          <div class="iu-scroll">
+
+            <div class="iu-section-label">User Details</div>
+            <div class="iu-form-card">
+              <div class="iu-field">
+                <label class="iu-label">First Name</label>
+                <input class="iu-input" type="text" value="Tim" disabled />
+              </div>
+              <div class="iu-field">
+                <label class="iu-label">Last Name</label>
+                <input class="iu-input" type="text" value="Cane" disabled />
+              </div>
+              <div class="iu-field">
+                <label class="iu-label">Email Address</label>
+                <input class="iu-input" type="email" value="tim@email.com" disabled />
+              </div>
+            </div>
+
+            <div class="iu-section-label">Properties and Roles</div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" checked />
+                <span class="iu-prop-name">Fountaine Downtown</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Fountaine Downtown<br><strong>Location:</strong> 120 Main St, Austin, TX 78701</div>
+                <div class="mobile-role-trigger" data-selected="Hotel Admin"><span class="role-label">Hotel Admin</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" />
+                <span class="iu-prop-name">Hyatt Hotels</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Hyatt Hotels<br><strong>Location:</strong> 71 S Wacker Dr, Chicago, IL 60606</div>
+                <div class="mobile-role-trigger" data-selected="Select Role"><span class="role-label">Select Role</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" checked />
+                <span class="iu-prop-name">Marriott Times Square</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Marriott Times Square<br><strong>Location:</strong> 1535 Broadway, New York, NY 10036</div>
+                <div class="mobile-role-trigger" data-selected="Front Desk"><span class="role-label">Front Desk</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" />
+                <span class="iu-prop-name">Ritz-Carlton San Francisco</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Ritz-Carlton San Francisco<br><strong>Location:</strong> 600 Stockton St, San Francisco, CA 94108</div>
+                <div class="mobile-role-trigger" data-selected="Select Role"><span class="role-label">Select Role</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" />
+                <span class="iu-prop-name">Four Seasons Miami</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Four Seasons Miami<br><strong>Location:</strong> 1435 Brickell Ave, Miami, FL 33131</div>
+                <div class="mobile-role-trigger" data-selected="Select Role"><span class="role-label">Select Role</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+            <div class="iu-prop-row">
+              <div class="iu-prop-header">
+                <input type="checkbox" class="iu-prop-cb" />
+                <span class="iu-prop-name">Hilton Downtown LA</span>
+                <span class="iu-prop-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="iu-prop-body">
+                <div class="iu-prop-detail"><strong>Hotel:</strong> Hilton Downtown LA<br><strong>Location:</strong> 555 S Figueroa St, Los Angeles, CA 90071</div>
+                <div class="mobile-role-trigger" data-selected="Select Role"><span class="role-label">Select Role</span><span class="role-chev">▼</span></div>
+              </div>
+            </div>
+
+          </div>
+          <div class="iu-footer">
+            <button id="update-user-btn">Update User</button>
+          </div>
+        </div>
 
         <!-- admin tab bar (fixed chrome, indigo accent) -->
         <nav class="admin-tabbar">
@@ -2047,8 +2582,8 @@
             AI Onboarding
           </button>
           <button class="admin-tab" data-admin-screen="more">
-            <svg viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="1.7" fill="currentColor"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/><circle cx="19" cy="12" r="1.7" fill="currentColor"/></svg>
-            More
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            Profile
           </button>
         </nav>
 
@@ -2118,24 +2653,9 @@ Does this all look correct, or would you like to update anything?</div>
               <h2 id="prop-name">Hyatt Indianapolis</h2>
               <button class="prop-overflow" id="prop-overflow-btn" aria-label="More actions"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5" r="1.8" fill="#2b2b30"/><circle cx="12" cy="12" r="1.8" fill="#2b2b30"/><circle cx="12" cy="19" r="1.8" fill="#2b2b30"/></svg></button>
             </div>
-            <!-- prototype-only variant toggle -->
-            <div class="variant-toggle">
-              <span>Nav pattern:</span>
-              <button class="vtbtn active" id="vt-dropdown">Dropdown</button>
-              <button class="vtbtn" id="vt-segment">Segmented</button>
-            </div>
           </div>
 
-          <!-- VARIANT A: Dropdown pill + date chip -->
-          <div class="prop-dropdown-bar visible" id="prop-dropdown-bar">
-            <button class="prop-dropdown-pill" id="prop-dropdown-trigger">
-              <span class="mod-label" id="prop-mod-label">QR Management</span>
-              <span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            </button>
-            <div class="prop-date-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> Nov 02 – Nov 12</div>
-          </div>
-
-          <!-- VARIANT B: Segmented control -->
+          <!-- Segmented control: QR / Lobby / Front Desk -->
           <div class="prop-segment-bar" id="prop-segment-bar">
             <div class="prop-segment">
               <button class="prop-seg-btn active" data-sec="qr">QR</button>
@@ -2149,7 +2669,12 @@ Does this all look correct, or would you like to update anything?</div>
             <button class="prop-subtab active" data-sub="summary">Summary</button>
             <button class="prop-subtab" data-sub="insights">Chat Insights</button>
             <button class="prop-subtab" data-sub="reputation">Reputation</button>
+            <button class="prop-subtab" data-sub="qrreviews">QR Reviews</button>
             <button class="prop-subtab" data-sub="info">Hotel Info</button>
+          </div>
+
+          <div class="global-date-bar visible" id="global-date-bar">
+            <button id="global-date-picker-trigger">🗓️ Nov 02 – Nov 12 <span style="font-size:10px;margin-left:4px">▼</span></button>
           </div>
 
           <div class="prop-scroll">
@@ -2299,8 +2824,11 @@ Does this all look correct, or would you like to update anything?</div>
                   </div>
                 </div>
 
+              </div>
+              <div class="prop-sub" data-sub="qrreviews">
+
                 <!-- QR Reviews -->
-                <div style="margin-top:14px">
+                <div>
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
                     <div><div style="font-size:15px;font-weight:700;color:var(--ink)">QR Reviews</div><div style="font-size:12px;color:var(--muted);margin-top:1px">Guest reviews submitted through QR codes</div></div>
                     <button style="display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Filter</button>
@@ -2355,14 +2883,6 @@ Does this all look correct, or would you like to update anything?</div>
 
                   </div>
 
-                  <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;font-size:13px;color:var(--muted)">
-                    <button style="padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;color:var(--ink);font-family:inherit">‹</button>
-                    <span style="padding:6px 11px;border-radius:8px;background:#4E5FFF;color:#fff;font-weight:600">1</span>
-                    <span style="padding:6px 10px">2</span>
-                    <span style="padding:6px 10px">3</span>
-                    <button style="padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;color:var(--ink);font-family:inherit">›</button>
-                  </div>
-                  <div style="text-align:center;font-size:11.5px;color:var(--muted);margin-top:6px">Total 85 items</div>
                 </div>
 
               </div>
@@ -2650,28 +3170,23 @@ Does this all look correct, or would you like to update anything?</div>
             </div>
           </div>
 
-        </div>
+          <!-- Date picker backdrop + bottom sheet -->
+          <div id="date-sheet-backdrop"></div>
+          <div id="date-bottom-sheet">
+            <div class="ds-header">
+              <button class="ds-close" id="ds-close">✕</button>
+              <div class="ds-header-title">Select Dates</div>
+            </div>
+            <div class="ds-body">
+              <div class="ds-month-label">November 2025</div>
+              <div class="ds-weekdays"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+              <div class="ds-grid" id="ds-grid"></div>
+            </div>
+            <div class="ds-footer">
+              <button id="apply-date-btn">Apply Changes</button>
+            </div>
+          </div>
 
-        <!-- Module picker sheet (Variant A: dropdown → sheet) -->
-        <div class="sheet-backdrop" id="module-backdrop"></div>
-        <div class="sheet" id="module-sheet">
-          <div class="sheet-handle"></div>
-          <div class="sheet-title">Switch module</div>
-          <button class="module-option active" data-sec="qr">
-            <span class="module-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.4" stroke="#4E5FFF" stroke-width="1.7"/><rect x="14" y="3" width="7" height="7" rx="1.4" stroke="#4E5FFF" stroke-width="1.7"/><rect x="3" y="14" width="7" height="7" rx="1.4" stroke="#4E5FFF" stroke-width="1.7"/><path d="M14 14.5h3.5V18M17.5 21H21M21 14.5V21" stroke="#4E5FFF" stroke-width="1.7" stroke-linecap="round"/></svg></span>
-            <span><div class="m-name">QR Management</div><div class="m-sub">Analytics, reputation &amp; hotel info</div></span>
-            <span class="module-check"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </button>
-          <button class="module-option" data-sec="lobby">
-            <span class="module-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="9" r="3" stroke="#4E5FFF" stroke-width="1.7"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5M16 8a3 3 0 010 6M17 19c0-2-.8-3.5-2-4.5" stroke="#4E5FFF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <span><div class="m-name">Lobby Config</div><div class="m-sub">Guest lobby events &amp; settings</div></span>
-            <span class="module-check"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </button>
-          <button class="module-option" data-sec="frontdesk">
-            <span class="module-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 5h16a1 1 0 011 1v10a1 1 0 01-1 1H9l-4 4V6a1 1 0 011-1z" stroke="#4E5FFF" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
-            <span><div class="m-name">Front Desk</div><div class="m-sub">Live guest chat &amp; requests</div></span>
-            <span class="module-check"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </button>
         </div>
 
         <!-- Front Desk conversation overlay -->
@@ -3059,7 +3574,7 @@ Does this all look correct, or would you like to update anything?</div>
           </div><!-- /gen-scroll -->
 
           <div class="gen-footer">
-            <span class="gen-count" id="gen-count">2 Selected</span>
+            <span class="gen-count" id="gen-count" style="display:none">2 Selected</span>
             <button class="gen-cancel" id="gen-cancel">Cancel</button>
             <button class="gen-add">Add Selected</button>
           </div>
@@ -3252,7 +3767,7 @@ Does this all look correct, or would you like to update anything?</div>
         <div class="sheet-backdrop" id="action-backdrop"></div>
         <div class="sheet" id="action-sheet">
           <div class="sheet-handle"></div>
-          <div class="sheet-title" id="action-sheet-hotel">Hyatt Indianapolis</div>
+          <div class="sheet-title" id="action-sheet-hotel" style="display:none">Hyatt Indianapolis</div>
           <button class="action-sheet-option" id="action-edit">
             <span class="opt-label">Edit Details</span>
             <span class="opt-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L18 10l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 6l4 4" stroke="currentColor" stroke-width="1.7"/></svg></span>
@@ -3260,6 +3775,10 @@ Does this all look correct, or would you like to update anything?</div>
           <button class="action-sheet-option" id="action-qr">
             <span class="opt-label">View QR Code</span>
             <span class="opt-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="3" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="14" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.7"/><path d="M14 14.5h3.5V18M17.5 21H21M21 14.5V21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+          </button>
+          <button class="action-sheet-option" id="action-disable-qr">
+            <span class="opt-label" style="color:#E05252;font-weight:600">Disable QR</span>
+            <span class="opt-icon" style="color:#E05252"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
           </button>
         </div>
 
@@ -3286,8 +3805,71 @@ Does this all look correct, or would you like to update anything?</div>
           </button>
         </div>
 
+        <!-- Post-login sheet 1: explains the Traveler/Hotel Admin switcher -->
+        <div class="sheet-backdrop" id="lw1-backdrop"></div>
+        <div class="sheet" id="lw1-sheet">
+          <div class="sheet-handle"></div>
+          <div class="lw-title" style="text-align:center;">Hi Bella 👋</div>
+          <div class="lw-copy" style="text-align:center;">Your email manages <strong>Hyatt Indianapolis</strong> and 3 other hotels. You can now access both the Traveler and Hotel Admin experiences in the same app, and switch between them anytime from your Profile, as shown below.</div>
+          <div class="edu-illus" style="margin:20px auto 20px;">
+            <div class="edu-sheet">
+              <div class="edu-sheet-handle"></div>
+              <div class="edu-sheet-row">
+                <span class="edu-sheet-ava person"></span>
+                <span class="edu-sheet-text">
+                  <span class="edu-sheet-name">Bella Swan</span>
+                  <span class="edu-sheet-sub">Personal &middot; Traveler</span>
+                </span>
+                <span class="edu-sheet-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+              <div class="edu-sheet-row">
+                <span class="edu-sheet-ava admin-ava"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M4 21V6a1 1 0 011-1h6v16M11 9h8a1 1 0 011 1v11M4 21h18" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="edu-sheet-text">
+                  <span class="edu-sheet-name">Hotel Admin</span>
+                  <span class="edu-sheet-sub">Manage your property</span>
+                </span>
+              </div>
+            </div>
+            <div class="edu-arrow"></div>
+            <div class="edu-tabbar">
+              <span class="edu-tab"><span class="dot"></span>Home</span>
+              <span class="edu-tab"><span class="dot"></span>Chats</span>
+              <span class="edu-tab"><span class="dot"></span>Trips</span>
+              <span class="edu-tab active"><span class="dot"></span>Profile</span>
+            </div>
+          </div>
+          <div class="edu-subcopy">Tap <strong>Profile</strong> &rarr; tap your name to switch between Traveler and Hotel Admin views at any time.</div>
+          <button class="edu-btn" id="lw1-gotit" style="margin-top:20px;">Got it</button>
+        </div>
+
+        <!-- Post-login sheet 2: choose where to land -->
+        <div class="sheet-backdrop" id="lw2-backdrop"></div>
+        <div class="sheet" id="lw2-sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title">Where would you like to start?</div>
+          <div class="ob-cards" style="margin-top:4px;">
+            <div class="ob-card" id="lw-traveler">
+              <div class="ob-card-icon traveler"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.6 4.9L18.5 9.5l-4.9 1.6L12 16l-1.6-4.9L5.5 9.5l4.9-1.6L12 3z" fill="#7A5CF0"/><path d="M19 4l.7 2 2 .7-2 .7L19 9.4l-.7-2-2-.7 2-.7L19 4z" fill="#7A5CF0"/></svg></div>
+              <div class="ob-card-body">
+                <div class="ob-card-title">Continue as Traveler</div>
+                <div class="ob-card-desc">Plan trips, browse hotels, and manage your bookings.</div>
+              </div>
+              <span class="ob-card-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </div>
+            <div class="ob-card" id="lw-admin">
+              <div class="ob-card-icon admin"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 21V6a1 1 0 011-1h6v16M11 9h8a1 1 0 011 1v11M4 21h18M7 9h.01M7 13h.01M15 13h.01M15 17h.01" stroke="#4E5FFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="ob-card-body">
+                <div class="ob-card-title">Open Hotel Admin</div>
+                <div class="ob-card-desc">Manage your property, monitor guest chats, and track QR performance.</div>
+              </div>
+              <span class="ob-card-chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </div>
+          </div>
+        </div>
+
         <!-- QR bottom sheet -->
         <div class="sheet-backdrop" id="qr-backdrop"></div>
+
         <div class="sheet" id="qr-sheet">
           <div class="sheet-handle"></div>
           <div class="qr-sheet-inner">
@@ -3460,6 +4042,22 @@ Does this all look correct, or would you like to update anything?</div>
           </div>
         </div>
 
+        <!-- Role Picker bottom sheet -->
+        <div id="rp-backdrop"></div>
+        <div id="role-picker-sheet">
+          <div class="rp-title">Select Role</div>
+          <div class="rp-options">
+            <button class="rp-option" data-role="Hotel Admin"><span>Hotel Admin</span><span class="rp-check">✓</span></button>
+            <button class="rp-option" data-role="Front Desk"><span>Front Desk</span><span class="rp-check">✓</span></button>
+            <button class="rp-option" data-role="General Manager"><span>General Manager</span><span class="rp-check">✓</span></button>
+            <button class="rp-option" data-role="Concierge"><span>Concierge</span><span class="rp-check">✓</span></button>
+          </div>
+          <div class="rp-footer">
+            <button id="rp-cancel">Cancel</button>
+            <button id="rp-apply">Apply</button>
+          </div>
+        </div>
+
       </div><!-- /phone -->
     </div><!-- /stage -->
   </div><!-- /fitwrap -->
@@ -3485,6 +4083,7 @@ Does this all look correct, or would you like to update anything?</div>
     const labels    = { home:'Travel planner', chats:'All', trips:'Trips - active', profile:'Profile wip' };
     const barColors = { home:'#E9E7FB', chats:'#EAE8FC', trips:'#FFFFFF', profile:'#7A2AF0' };
     const lightBar  = { profile:true };      // screens needing white status-bar content
+    let loggedIn = false;                    // guest by default; Profile tab reflects this
     function show(name){
       const panel = document.getElementById('panel-'+name);
       if(!panel) return;                       // only built screens navigate
@@ -3494,8 +4093,17 @@ Does this all look correct, or would you like to update anything?</div>
         t.classList.toggle('active', t.dataset.screen === name));
       screen.scrollTop = 0;
       label.textContent = labels[name] || label.textContent;
-      if(barColors[name]) statusbar.style.background = barColors[name];
-      statusbar.classList.toggle('light', !!lightBar[name]);
+      if(name === 'profile'){
+        statusbar.style.background = loggedIn ? barColors.profile : barColors.home;
+        statusbar.classList.toggle('light', loggedIn);
+      } else {
+        if(barColors[name]) statusbar.style.background = barColors[name];
+        statusbar.classList.toggle('light', !!lightBar[name]);
+      }
+    }
+    function renderProfileState(){
+      document.getElementById('profile-loggedout').style.display = loggedIn ? 'none' : 'block';
+      document.getElementById('profile-loggedin').style.display  = loggedIn ? 'block' : 'none';
     }
     document.querySelectorAll('.tab').forEach(tab =>
       tab.addEventListener('click', () => show(tab.dataset.screen)));
@@ -3531,7 +4139,7 @@ Does this all look correct, or would you like to update anything?</div>
 
     // ---- admin tab navigation (Dashboard / Guest Chats / More) ----
     const adminShell  = document.querySelector('.admin-shell');
-    const adminLabels = { home:'Hotel Admin - Home', chats:'Hotel Admin - Guest Chats', ai:'Hotel Admin - AI Onboarding', more:'Hotel Admin - More' };
+    const adminLabels = { home:'Hotel Admin - Home', chats:'Hotel Admin - Guest Chats', ai:'Hotel Admin - AI Onboarding', more:'Hotel Admin - Profile' };
     function showAdmin(name){
       closeAiOverlays();                       // leaving any property/setup drill-in
       document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
@@ -3543,6 +4151,113 @@ Does this all look correct, or would you like to update anything?</div>
     }
     document.querySelectorAll('.admin-tab').forEach(t =>
       t.addEventListener('click', () => showAdmin(t.dataset.adminScreen)));
+
+    // ---- User Management page ----
+    (function initUserManagement(){
+      const umView     = document.getElementById('user-management-view');
+      const umBack     = document.getElementById('um-back');
+      const umSearch   = document.getElementById('user-search');
+      const umOpen     = document.getElementById('open-user-management');
+      const umCards    = umView.querySelectorAll('.um-card');
+      const uasSheet   = document.getElementById('user-action-sheet');
+      const uasBackdrop= document.getElementById('um-sheet-backdrop');
+
+      umOpen.addEventListener('click', () => umView.classList.remove('hidden'));
+      umBack.addEventListener('click', () => { umView.classList.add('hidden'); umSearch.value = ''; umCards.forEach(c => c.classList.remove('hidden-card')); });
+
+      umSearch.addEventListener('input', () => {
+        const q = umSearch.value.trim().toLowerCase();
+        umCards.forEach(c => {
+          c.classList.toggle('hidden-card', q && !c.dataset.searchable.includes(q));
+        });
+      });
+
+      function openSheet(){ uasBackdrop.classList.add('open'); uasSheet.classList.add('open'); }
+      function closeSheet(){ uasSheet.classList.remove('open'); uasBackdrop.classList.remove('open'); }
+
+      umView.querySelectorAll('.um-menu-trigger').forEach(btn =>
+        btn.addEventListener('click', e => { e.stopPropagation(); openSheet(); }));
+      uasBackdrop.addEventListener('click', closeSheet);
+      document.getElementById('uas-delete').addEventListener('click', closeSheet);
+
+      // Edit / Manage User sub-page
+      const euView = document.getElementById('edit-user-view');
+      const euBack = document.getElementById('eu-back');
+      document.getElementById('uas-edit').addEventListener('click', () => { closeSheet(); euView.classList.remove('hidden'); });
+      euBack.addEventListener('click', () => euView.classList.add('hidden'));
+      document.getElementById('update-user-btn').addEventListener('click', () => euView.classList.add('hidden'));
+
+      // Edit user accordion toggles
+      euView.querySelectorAll('.iu-prop-header').forEach(header => {
+        header.addEventListener('click', e => {
+          if(e.target.classList.contains('iu-prop-cb')) return;
+          header.closest('.iu-prop-row').classList.toggle('expanded');
+        });
+      });
+
+      // Invite User sub-page
+      const iuView = document.getElementById('invite-user-view');
+      const iuBack = document.getElementById('iu-back');
+      umView.querySelector('.um-invite-btn').addEventListener('click', () => iuView.classList.remove('hidden'));
+      iuBack.addEventListener('click', () => iuView.classList.add('hidden'));
+
+      // Accordion toggles
+      iuView.querySelectorAll('.iu-prop-header').forEach(header => {
+        header.addEventListener('click', e => {
+          if(e.target.classList.contains('iu-prop-cb')) return;
+          header.closest('.iu-prop-row').classList.toggle('expanded');
+        });
+      });
+
+      // Send invite closes the page
+      document.getElementById('send-invite-btn').addEventListener('click', () => iuView.classList.add('hidden'));
+    })();
+
+    // ---- Role Picker bottom sheet ----
+    (function initRolePicker(){
+      const rpBackdrop = document.getElementById('rp-backdrop');
+      const rpSheet    = document.getElementById('role-picker-sheet');
+      const rpOptions  = rpSheet.querySelectorAll('.rp-option');
+      const rpApply    = document.getElementById('rp-apply');
+      const rpCancel   = document.getElementById('rp-cancel');
+      let activeTrigger = null;
+      let originalRole  = null;
+
+      function openRP(trigger){
+        activeTrigger = trigger;
+        originalRole  = trigger.dataset.selected;
+        rpOptions.forEach(o => o.classList.toggle('selected', o.dataset.role === originalRole));
+        rpBackdrop.classList.add('open');
+        rpSheet.classList.add('open');
+      }
+      function closeRP(){
+        rpSheet.classList.remove('open');
+        rpBackdrop.classList.remove('open');
+        activeTrigger = null;
+      }
+      function applyRP(){
+        if(activeTrigger){
+          const sel = rpSheet.querySelector('.rp-option.selected');
+          if(sel){
+            activeTrigger.dataset.selected = sel.dataset.role;
+            activeTrigger.querySelector('.role-label').textContent = sel.dataset.role;
+          }
+        }
+        closeRP();
+      }
+
+      document.addEventListener('click', e => {
+        const trigger = e.target.closest('.mobile-role-trigger');
+        if(trigger) openRP(trigger);
+      });
+      rpOptions.forEach(o => o.addEventListener('click', () => {
+        rpOptions.forEach(x => x.classList.remove('selected'));
+        o.classList.add('selected');
+      }));
+      rpApply.addEventListener('click', applyRP);
+      rpCancel.addEventListener('click', closeRP);
+      rpBackdrop.addEventListener('click', closeRP);
+    })();
 
     // ---- hotel performance cards: drill-in on tap ----
     const hpList = document.getElementById('hp-list');
@@ -3698,9 +4413,11 @@ Does this all look correct, or would you like to update anything?</div>
     document.getElementById('ai-publish-btn').addEventListener('click', () =>
       openAiPublished(document.getElementById('ai-setup-name').textContent));
 
-    // ---- property detail: sections (floating pill) + QR sub-tabs ----
-    // ---- Property detail navigation ----
+    // ---- property detail: sections (segmented control) + QR sub-tabs ----
     const propSubtabs  = document.getElementById('prop-subtabs');
+    const globalDateBar = document.getElementById('global-date-bar');
+    const dateTabsWithPill = ['summary','insights','reputation'];
+
     function openAiProperty(name){
       document.getElementById('prop-name').textContent = name;
       aiProperty.classList.add('open');
@@ -3710,60 +4427,70 @@ Does this all look correct, or would you like to update anything?</div>
     }
     document.getElementById('ai-godash').addEventListener('click', () =>
       openAiProperty(document.getElementById('ai-pub-name').textContent));
-    const propDropBar  = document.getElementById('prop-dropdown-bar');
-    const propSegBar   = document.getElementById('prop-segment-bar');
-    const modLabel     = document.getElementById('prop-mod-label');
-    const moduleNames  = { qr:'QR Management', lobby:'Lobby Config', frontdesk:'Front Desk' };
-    let activeVariant  = 'dropdown';
 
     function showPropSection(sec){
       aiProperty.querySelectorAll('.prop-sec').forEach(s => s.classList.toggle('active', s.dataset.sec === sec));
       propSubtabs.style.display = (sec === 'qr') ? 'flex' : 'none';
-      modLabel.textContent = moduleNames[sec] || sec;
       document.querySelectorAll('.prop-seg-btn').forEach(b => b.classList.toggle('active', b.dataset.sec === sec));
-      document.querySelectorAll('.module-option').forEach(o => o.classList.toggle('active', o.dataset.sec === sec));
       aiProperty.querySelector('.prop-scroll').scrollTop = 0;
+      const activeSubTab = propSubtabs.querySelector('.prop-subtab.active');
+      const sub = activeSubTab ? activeSubTab.dataset.sub : '';
+      globalDateBar.classList.toggle('visible', sec === 'qr' && dateTabsWithPill.includes(sub));
     }
+
     function showPropSub(sub){
       const qr = aiProperty.querySelector('.prop-sec[data-sec="qr"]');
       qr.querySelectorAll('.prop-sub').forEach(s => s.classList.toggle('active', s.dataset.sub === sub));
       propSubtabs.querySelectorAll('.prop-subtab').forEach(t => t.classList.toggle('active', t.dataset.sub === sub));
+      globalDateBar.classList.toggle('visible', dateTabsWithPill.includes(sub));
     }
 
-    // variant A: dropdown trigger → module sheet
-    const moduleBackdrop = document.getElementById('module-backdrop');
-    const moduleSheet    = document.getElementById('module-sheet');
-    const dropTrigger    = document.getElementById('prop-dropdown-trigger');
-    function openModuleSheet(){ moduleBackdrop.classList.add('open'); moduleSheet.classList.add('open'); dropTrigger.classList.add('open'); }
-    function closeModuleSheet(){ moduleBackdrop.classList.remove('open'); moduleSheet.classList.remove('open'); dropTrigger.classList.remove('open'); }
-    if(dropTrigger) dropTrigger.addEventListener('click', openModuleSheet);
-    if(moduleBackdrop) moduleBackdrop.addEventListener('click', closeModuleSheet);
-    document.querySelectorAll('.module-option').forEach(opt => opt.addEventListener('click', () => {
-      showPropSection(opt.dataset.sec); closeModuleSheet();
-    }));
-
-    // variant B: segmented control
+    // segmented control: QR / Lobby / Front Desk
     document.querySelectorAll('.prop-seg-btn').forEach(b => b.addEventListener('click', () => showPropSection(b.dataset.sec)));
 
     // sub-tabs (QR Management only)
     propSubtabs.querySelectorAll('.prop-subtab').forEach(t => t.addEventListener('click', () => showPropSub(t.dataset.sub)));
 
+    // ---- Date picker bottom sheet ----
+    (function initDateSheet(){
+      const trigger  = document.getElementById('global-date-picker-trigger');
+      const backdrop = document.getElementById('date-sheet-backdrop');
+      const sheet    = document.getElementById('date-bottom-sheet');
+      const closeBtn = document.getElementById('ds-close');
+      const applyBtn = document.getElementById('apply-date-btn');
+      const grid     = document.getElementById('ds-grid');
+
+      // Build November 2025 calendar (starts on Saturday = col 7)
+      const startDay = 6; // Saturday (0-indexed, 0=Sun)
+      const daysInMonth = 30;
+      const rangeStart = 2, rangeEnd = 12;
+      for(let i = 0; i < startDay; i++){
+        const e = document.createElement('span');
+        e.className = 'ds-day empty';
+        grid.appendChild(e);
+      }
+      for(let d = 1; d <= daysInMonth; d++){
+        const e = document.createElement('span');
+        let cls = 'ds-day';
+        if(d === rangeStart) cls += ' range-start';
+        else if(d === rangeEnd) cls += ' range-end';
+        else if(d > rangeStart && d < rangeEnd) cls += ' in-range';
+        e.className = cls;
+        e.textContent = d;
+        grid.appendChild(e);
+      }
+
+      function openSheet(){ backdrop.classList.add('open'); sheet.classList.add('open'); }
+      function closeSheet(){ sheet.classList.remove('open'); backdrop.classList.remove('open'); }
+
+      trigger.addEventListener('click', openSheet);
+      closeBtn.addEventListener('click', closeSheet);
+      backdrop.addEventListener('click', closeSheet);
+      applyBtn.addEventListener('click', closeSheet);
+    })();
+
     // back button
     aiProperty.querySelector('.prop-back').addEventListener('click', closeAiOverlays);
-
-    // prototype variant toggle
-    document.getElementById('vt-dropdown').addEventListener('click', () => {
-      activeVariant = 'dropdown';
-      document.getElementById('vt-dropdown').classList.add('active');
-      document.getElementById('vt-segment').classList.remove('active');
-      propDropBar.classList.add('visible'); propSegBar.classList.remove('visible');
-    });
-    document.getElementById('vt-segment').addEventListener('click', () => {
-      activeVariant = 'segment';
-      document.getElementById('vt-segment').classList.add('active');
-      document.getElementById('vt-dropdown').classList.remove('active');
-      propSegBar.classList.add('visible'); propDropBar.classList.remove('visible');
-    });
 
     // setup chat interactivity
     const aiChat = document.getElementById('ai-chat');
@@ -3980,12 +4707,14 @@ Does this all look correct, or would you like to update anything?</div>
         const div = document.createElement('div');
         div.className = 'gc-row' + (item.status === 'needs' ? ' unread' : '');
         div.innerHTML =
-          `<div class="gc-left">
-            <div class="gc-hotel">${item.hotel}${item.sn ? '<span class="gc-sn-dot"></span>' : ''}</div>
-            <div class="gc-guest">${item.guest} &bull; RM ${item.room}</div>
+          `<div class="gc-top-line">
+            <div class="gc-hotel">${item.hotel}</div>
+            <span class="gc-time">${item.time}</span>
           </div>
-          <div class="gc-center">${item.time}</div>
-          <div class="gc-right">${activeTab === 'all' ? `<span class="gc-pill ${item.status}">${item.status === 'needs' ? 'Needs reply' : 'Replied'}</span>` : ''}</div>`;
+          <div class="gc-bottom-line">
+            <div class="gc-guest">${item.guest} &bull; RM ${item.room}</div>
+            ${item.status === 'needs' ? '<span class="gc-unread-dot"></span>' : ''}
+          </div>`;
         return div;
       }
 
@@ -4300,42 +5029,96 @@ Does this all look correct, or would you like to update anything?</div>
     if(propQr) propQr.addEventListener('click', () =>
       openQrSheet(document.getElementById('prop-name').textContent));
 
-    // ---- Pre-app flow: Login → Education → Choice ----
-    const loginScreen  = document.getElementById('login-screen');
-    const eduScreen    = document.getElementById('edu-screen');
-    const choiceScreen = document.getElementById('choice-screen');
+    // ---- Profile: Login (guest → traveler, optionally hotel admin) ----
+    const loginScreen = document.getElementById('login-screen');
     const FADE = 280;
+    const ADMIN_EMAIL = 'bella.swan@staynow.com';
 
-    function fadeStep(outEl, inEl){
-      outEl.classList.add('fade-out');
+    function openLogin(){
+      phone.classList.add('pre-app');
+      loginScreen.classList.remove('fade-out');
+      loginScreen.style.display = '';
+      loginScreen.classList.remove('hidden');
+      setBar('#E9E7FB', false);
+    }
+    function closeLogin(){
+      loginScreen.classList.add('fade-out');
       setTimeout(() => {
-        outEl.style.display = 'none';
-        if(inEl){ inEl.classList.remove('hidden'); }
+        loginScreen.style.display = 'none';
+        loginScreen.classList.remove('fade-out');
+        phone.classList.remove('pre-app');
       }, FADE);
     }
-
-    function dismissAll(){
-      phone.classList.remove('pre-app');
-      [loginScreen, eduScreen, choiceScreen].forEach(el => {
-        el.classList.add('fade-out');
-        setTimeout(() => { el.style.display = 'none'; }, FADE);
-      });
-    }
-
-    // Step 1 → Step 2
-    document.getElementById('login-btn').addEventListener('click', () => fadeStep(loginScreen, eduScreen));
-
-    // Step 2 → Step 3
-    document.getElementById('edu-gotit').addEventListener('click', () => fadeStep(eduScreen, choiceScreen));
-
-    // Step 3 → App
-    document.getElementById('ob-traveler').addEventListener('click', () => {
-      dismissAll();
-      show('home');
+    document.getElementById('profile-login-btn').addEventListener('click', openLogin);
+    document.getElementById('login-back').addEventListener('click', () => {
+      closeLogin();
+      show('profile');                     // still logged out — refresh guest bar/label
     });
-    document.getElementById('ob-admin').addEventListener('click', () => {
-      dismissAll();
+
+    // Post-login sheets shown for the linked admin account: (1) explain the switcher, (2) choose where to land
+    const lw1Backdrop = document.getElementById('lw1-backdrop');
+    const lw1Sheet     = document.getElementById('lw1-sheet');
+    const lw2Backdrop = document.getElementById('lw2-backdrop');
+    const lw2Sheet     = document.getElementById('lw2-sheet');
+    function openLw1(){ lw1Backdrop.classList.add('open'); lw1Sheet.classList.add('open'); }
+    function closeLw1(){ lw1Backdrop.classList.remove('open'); lw1Sheet.classList.remove('open'); }
+    function openLw2(){ lw2Backdrop.classList.add('open'); lw2Sheet.classList.add('open'); }
+    function closeLw2(){ lw2Backdrop.classList.remove('open'); lw2Sheet.classList.remove('open'); }
+    lw1Backdrop.addEventListener('click', closeLw1);
+    lw2Backdrop.addEventListener('click', closeLw2);
+    document.getElementById('lw1-gotit').addEventListener('click', () => {
+      closeLw1();
+      setTimeout(openLw2, 260);
+    });
+    document.getElementById('lw-traveler').addEventListener('click', closeLw2);
+    document.getElementById('lw-admin').addEventListener('click', () => {
+      closeLw2();
       enterAdmin();
+    });
+
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const email = document.getElementById('login-email').value.trim().toLowerCase();
+      closeLogin();
+      loggedIn = true;
+      renderProfileState();
+      show('profile');                     // land back on Profile, now logged in
+      if(email === ADMIN_EMAIL){
+        setTimeout(openLw1, FADE + 80);
+      }
+    });
+
+    // Account detail (Profile → Account) — shared by Traveler and Hotel Admin
+    const acctView = document.getElementById('acct-view');
+    function openAcctView(){
+      acctView.classList.remove('hidden');
+      setBar('#FFFFFF', false);
+    }
+    function closeAcctView(){
+      acctView.classList.add('hidden');
+      if(ctxMode === 'admin'){ setBar('#FFFFFF', false); showAdmin('more'); }
+      else { show('profile'); }
+    }
+    document.getElementById('acct-open-btn').addEventListener('click', openAcctView);
+    document.getElementById('admin-acct-open-btn').addEventListener('click', openAcctView);
+    document.getElementById('acct-back').addEventListener('click', closeAcctView);
+
+    // Sign-out confirmation: warns that both Traveler and Hotel Admin will be signed out
+    const signoutBackdrop = document.getElementById('signout-backdrop');
+    const signoutSheet    = document.getElementById('signout-sheet');
+    function openSignoutConfirm(){ signoutBackdrop.classList.add('open'); signoutSheet.classList.add('open'); }
+    function closeSignoutConfirm(){ signoutBackdrop.classList.remove('open'); signoutSheet.classList.remove('open'); }
+    document.getElementById('signout-btn').addEventListener('click', openSignoutConfirm);
+    document.getElementById('admin-signout-btn').addEventListener('click', openSignoutConfirm);
+    signoutBackdrop.addEventListener('click', closeSignoutConfirm);
+    document.getElementById('signout-cancel-btn').addEventListener('click', closeSignoutConfirm);
+    document.getElementById('signout-confirm-btn').addEventListener('click', () => {
+      closeSignoutConfirm();
+      acctView.classList.add('hidden');    // in case Sign Out was tapped from within Account
+      phone.classList.remove('mode-admin'); // fully exits Hotel Admin too
+      loggedIn = false;
+      ctxMode = 'traveler';
+      renderProfileState();
+      show('profile');
     });
   </script>
 

@@ -1039,17 +1039,34 @@
   .ld-sched-cell:last-child{ border-right:none; }
 
   /* chats analytics */
-  .ld-filter-row{ display:flex; gap:8px; padding:12px 14px 10px; }
-  .ld-filter-chip{ height:36px; padding:0 13px; border-radius:10px; border:1px solid var(--line); background:#fff; font-family:inherit; font-size:13px; font-weight:500; color:var(--muted); cursor:pointer; white-space:nowrap; }
-  .ld-filter-chip.active{ background:#EBEEFF; border-color:#C7CFFF; color:#4E5FFF; font-weight:600; }
+  .ld-date-bar{ padding:12px 14px 8px; }
+  #lobby-date-trigger{ display:flex; align-items:center; justify-content:space-between; width:100%;
+    min-height:44px; padding:0 16px; border-radius:12px; background:#fff; border:1px solid var(--line);
+    font-size:13px; font-weight:600; color:var(--ink); cursor:pointer; font-family:inherit;
+    -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  #lobby-date-trigger:active{ background:#F0F1F6; }
 
-  .ld-chat-row{ padding:12px 14px; border-bottom:1px solid var(--line-soft); cursor:pointer; }
+  .ld-chat-row{ display:flex; align-items:center; padding:14px; border-bottom:1px solid var(--line-soft);
+    cursor:pointer; -webkit-tap-highlight-color:transparent; gap:10px; }
+  .ld-chat-row:active{ background:#F8F8FB; }
   .ld-chat-row:last-child{ border-bottom:none; }
-  .ld-chat-date{ font-size:13.5px; font-weight:600; color:var(--ink); margin-bottom:7px; }
-  .ld-chat-metrics{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
-  .ld-metric{ background:#F4F5F9; border-radius:8px; padding:7px 8px; }
-  .ld-metric .ml{ font-size:10.5px; color:var(--muted); font-weight:500; margin-bottom:2px; }
-  .ld-metric .mv{ font-size:14px; font-weight:700; color:var(--ink); }
+  .ld-chat-date{ font-size:13.5px; font-weight:700; color:var(--ink); margin-bottom:4px; }
+  .ld-chat-inline{ display:flex; align-items:center; gap:12px; font-size:12px; color:var(--muted); }
+  .ld-chat-inline span{ display:flex; align-items:center; gap:3px; white-space:nowrap; }
+  .ld-chat-body{ flex:1; min-width:0; }
+  .ld-chat-chev{ flex:0 0 auto; color:#C4C8D0; display:flex; }
+
+  /* Lobby date bottom sheet */
+  #lobby-date-backdrop{ display:none; position:absolute; inset:0; background:rgba(0,0,0,.35); z-index:60; }
+  #lobby-date-backdrop.open{ display:block; }
+  #lobby-date-sheet{ position:absolute; bottom:0; left:0; right:0; z-index:61; background:#fff;
+    border-radius:16px 16px 0 0; transform:translateY(100%); transition:transform .3s ease;
+    display:flex; flex-direction:column; max-height:80%; }
+  #lobby-date-sheet.open{ transform:translateY(0); }
+  .lobby-apply-btn{ display:block; width:100%; padding:14px; border:none; border-radius:12px;
+    background:#4E5FFF; color:#fff; font-size:15px; font-weight:700; cursor:pointer;
+    font-family:inherit; -webkit-tap-highlight-color:transparent; }
+  .lobby-apply-btn:active{ background:#3D4EDB; }
 
   .ld-pagination{ display:flex; align-items:center; justify-content:space-between; padding:12px 14px 14px; border-top:1px solid var(--line-soft); margin-top:2px; }
   .ld-page-info{ font-size:12px; color:var(--muted); }
@@ -3356,71 +3373,65 @@ Does this all look correct, or would you like to update anything?</div>
             <div class="ld-card">
               <div class="ld-card-title" style="padding-bottom:0">Chats</div>
 
-              <div class="ld-filter-row">
-                <button class="ld-filter-chip active">Specific date</button>
-                <button class="ld-filter-chip">Date range</button>
-                <button class="ld-filter-chip" style="display:flex;align-items:center;gap:5px;padding:0 11px">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-                  Jul 2, 2026
-                </button>
+              <div class="ld-date-bar">
+                <div id="lobby-date-trigger" role="button" tabindex="0"><span>🗓️ Jun 24, 2026 — Jul 02, 2026</span><span class="role-chev">▼</span></div>
               </div>
 
               <div class="ld-chat-row">
-                <div class="ld-chat-date">Jun 28, 2026</div>
-                <div class="ld-chat-metrics">
-                  <div class="ld-metric"><div class="ml">Participants</div><div class="mv">12</div></div>
-                  <div class="ld-metric"><div class="ml">Messages</div><div class="mv">148</div></div>
-                  <div class="ld-metric"><div class="ml">Moderated</div><div class="mv">2</div></div>
+                <div class="ld-chat-body">
+                  <div class="ld-chat-date">Jun 28, 2026</div>
+                  <div class="ld-chat-inline"><span>💬 148 Messages</span><span>👥 12 Participants</span><span>⚠️ 2 Moderated</span></div>
                 </div>
+                <span class="ld-chat-chev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </div>
               <div class="ld-chat-row">
-                <div class="ld-chat-date">Jun 27, 2026</div>
-                <div class="ld-chat-metrics">
-                  <div class="ld-metric"><div class="ml">Participants</div><div class="mv">9</div></div>
-                  <div class="ld-metric"><div class="ml">Messages</div><div class="mv">93</div></div>
-                  <div class="ld-metric"><div class="ml">Moderated</div><div class="mv">0</div></div>
+                <div class="ld-chat-body">
+                  <div class="ld-chat-date">Jun 27, 2026</div>
+                  <div class="ld-chat-inline"><span>💬 93 Messages</span><span>👥 9 Participants</span><span>⚠️ 0 Moderated</span></div>
                 </div>
+                <span class="ld-chat-chev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </div>
               <div class="ld-chat-row">
-                <div class="ld-chat-date">Jun 26, 2026</div>
-                <div class="ld-chat-metrics">
-                  <div class="ld-metric"><div class="ml">Participants</div><div class="mv">18</div></div>
-                  <div class="ld-metric"><div class="ml">Messages</div><div class="mv">204</div></div>
-                  <div class="ld-metric"><div class="ml">Moderated</div><div class="mv">5</div></div>
+                <div class="ld-chat-body">
+                  <div class="ld-chat-date">Jun 26, 2026</div>
+                  <div class="ld-chat-inline"><span>💬 204 Messages</span><span>👥 18 Participants</span><span>⚠️ 5 Moderated</span></div>
                 </div>
+                <span class="ld-chat-chev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </div>
               <div class="ld-chat-row">
-                <div class="ld-chat-date">Jun 25, 2026</div>
-                <div class="ld-chat-metrics">
-                  <div class="ld-metric"><div class="ml">Participants</div><div class="mv">7</div></div>
-                  <div class="ld-metric"><div class="ml">Messages</div><div class="mv">61</div></div>
-                  <div class="ld-metric"><div class="ml">Moderated</div><div class="mv">1</div></div>
+                <div class="ld-chat-body">
+                  <div class="ld-chat-date">Jun 25, 2026</div>
+                  <div class="ld-chat-inline"><span>💬 61 Messages</span><span>👥 7 Participants</span><span>⚠️ 1 Moderated</span></div>
                 </div>
+                <span class="ld-chat-chev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </div>
               <div class="ld-chat-row">
-                <div class="ld-chat-date">Jun 24, 2026</div>
-                <div class="ld-chat-metrics">
-                  <div class="ld-metric"><div class="ml">Participants</div><div class="mv">14</div></div>
-                  <div class="ld-metric"><div class="ml">Messages</div><div class="mv">177</div></div>
-                  <div class="ld-metric"><div class="ml">Moderated</div><div class="mv">3</div></div>
+                <div class="ld-chat-body">
+                  <div class="ld-chat-date">Jun 24, 2026</div>
+                  <div class="ld-chat-inline"><span>💬 177 Messages</span><span>👥 14 Participants</span><span>⚠️ 3 Moderated</span></div>
                 </div>
-              </div>
-
-              <div class="ld-pagination">
-                <span class="ld-page-info">Showing 1–5 of 82 items</span>
-                <div class="ld-page-btns">
-                  <button class="ld-page-btn arrow">‹</button>
-                  <button class="ld-page-btn active">1</button>
-                  <button class="ld-page-btn">2</button>
-                  <button class="ld-page-btn">3</button>
-                  <span style="font-size:13px;color:var(--muted);padding:0 2px">···</span>
-                  <button class="ld-page-btn">50</button>
-                  <button class="ld-page-btn arrow">›</button>
-                </div>
+                <span class="ld-chat-chev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </div>
             </div>
 
           </div><!-- /ld-scroll -->
+
+          <!-- Lobby date picker bottom sheet -->
+          <div id="lobby-date-backdrop"></div>
+          <div id="lobby-date-sheet">
+            <div class="ds-header">
+              <button class="ds-close" id="lobby-ds-close">✕</button>
+              <div class="ds-header-title">Select Dates</div>
+            </div>
+            <div class="ds-body">
+              <div class="ds-month-label">June 2026</div>
+              <div class="ds-weekdays"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+              <div class="ds-grid" id="lobby-ds-grid"></div>
+            </div>
+            <div class="ds-footer">
+              <button class="lobby-apply-btn" id="lobby-apply-date">Apply Changes</button>
+            </div>
+          </div>
         </div>
 
         <!-- Lobby Details action sheet -->
@@ -4853,13 +4864,43 @@ Does this all look correct, or would you like to update anything?</div>
       setTimeout(() => ldCopyBtn.style.color = '', 1200);
     });
 
-    // filter chips
-    document.querySelectorAll('#lobbydetail-overlay .ld-filter-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('#lobbydetail-overlay .ld-filter-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-      });
-    });
+    // Lobby date picker bottom sheet
+    (function initLobbyDateSheet(){
+      const trigger  = document.getElementById('lobby-date-trigger');
+      const backdrop = document.getElementById('lobby-date-backdrop');
+      const sheet    = document.getElementById('lobby-date-sheet');
+      const closeBtn = document.getElementById('lobby-ds-close');
+      const applyBtn = document.getElementById('lobby-apply-date');
+      const grid     = document.getElementById('lobby-ds-grid');
+
+      // Build June 2026 calendar (starts on Monday = col 2)
+      const startDay = 1; // Monday (0=Sun)
+      const daysInMonth = 30;
+      const rangeStart = 24, rangeEnd = 30;
+      for(let i = 0; i < startDay; i++){
+        const e = document.createElement('span');
+        e.className = 'ds-day empty';
+        grid.appendChild(e);
+      }
+      for(let d = 1; d <= daysInMonth; d++){
+        const e = document.createElement('span');
+        let cls = 'ds-day';
+        if(d === rangeStart) cls += ' range-start';
+        else if(d === rangeEnd) cls += ' range-end';
+        else if(d > rangeStart && d < rangeEnd) cls += ' in-range';
+        e.className = cls;
+        e.textContent = d;
+        grid.appendChild(e);
+      }
+
+      function openSheet(){ backdrop.classList.add('open'); sheet.classList.add('open'); }
+      function closeSheet(){ sheet.classList.remove('open'); backdrop.classList.remove('open'); }
+
+      trigger.addEventListener('click', openSheet);
+      closeBtn.addEventListener('click', closeSheet);
+      backdrop.addEventListener('click', closeSheet);
+      applyBtn.addEventListener('click', closeSheet);
+    })();
 
     // lobby cards → open detail
     document.querySelectorAll('.lobby-card').forEach(card =>
